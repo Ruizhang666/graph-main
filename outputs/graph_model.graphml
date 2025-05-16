@@ -1,0 +1,1298 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d8" for="edge" attr.name="source_info" attr.type="string" />
+  <key id="d7" for="edge" attr.name="sh_type" attr.type="string" />
+  <key id="d6" for="edge" attr.name="percent" attr.type="string" />
+  <key id="d5" for="edge" attr.name="amount" attr.type="string" />
+  <key id="d4" for="node" attr.name="level" attr.type="string" />
+  <key id="d3" for="node" attr.name="level" attr.type="long" />
+  <key id="d2" for="node" attr.name="short_name" attr.type="string" />
+  <key id="d1" for="node" attr.name="type" attr.type="string" />
+  <key id="d0" for="node" attr.name="name" attr.type="string" />
+  <graph edgedefault="directed">
+    <node id="q5d6c6e2ee5e04a76af906869b8db252e">
+      <data key="d0">宁波则立贸易有限公司</data>
+      <data key="d1" />
+      <data key="d2" />
+      <data key="d3">0</data>
+    </node>
+    <node id="q53439a653c3545c2bb6d2b17ef3009a5">
+      <data key="d0">海南嘉水贸易有限责任公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">1</data>
+    </node>
+    <node id="王云娟">
+      <data key="d0">王云娟</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">2</data>
+    </node>
+    <node id="章立">
+      <data key="d0">章立</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">2</data>
+    </node>
+    <node id="q51d63cb97ad56fe0677663d6894f382d">
+      <data key="d0">恒力石化（大连）有限公司</data>
+      <data key="d1" />
+      <data key="d2" />
+      <data key="d3">0</data>
+    </node>
+    <node id="q91ad208643d20e24aaddc2e0442951f3">
+      <data key="d0">恒力投资（大连）有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">1</data>
+    </node>
+    <node id="qeb3d76b013bfb3a02fb7de2779f9073c">
+      <data key="d0">恒力石化股份有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2">恒力石化</data>
+      <data key="d4">2</data>
+    </node>
+    <node id="q24a4a64e9e66b9da9074272e14f190fa">
+      <data key="d0">恒力集团有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="q39ddf61faffb427f3b8a055d8f930300">
+      <data key="d0">恒能投资（大连）有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="范红卫">
+      <data key="d0">范红卫</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="德诚利国际集团有限公司">
+      <data key="d0">德诚利国际集团有限公司</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="香港中央结算有限公司">
+      <data key="d0">香港中央结算有限公司</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="玄元私募基金投资管理（广东）有限公司-玄元元宝16号私募证券投资基金">
+      <data key="d0">玄元私募基金投资管理（广东）有限公司-玄元元宝16号私募证券投资基金</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="q798313c3f322e9e78ec3e761dd1c46e0">
+      <data key="d0">大连市国有资产投资经营集团有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="玄元私募基金投资管理（广东）有限公司-玄元元宝17号私募证券投资基金">
+      <data key="d0">玄元私募基金投资管理（广东）有限公司-玄元元宝17号私募证券投资基金</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="玄元私募基金投资管理（广东）有限公司-玄元元宝18号私募证券投资基金">
+      <data key="d0">玄元私募基金投资管理（广东）有限公司-玄元元宝18号私募证券投资基金</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="qc28d623a7013cdad35d346e9c427197e">
+      <data key="d0">江苏和高投资有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="qfd8502ce71683f1517b664bcd0ff409a">
+      <data key="d0">大连市金州区锻压件厂</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="q634b60d18735a97d00437ab3602e0102">
+      <data key="d0">大连冶金轴承集团公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="qf7555e5d4aad7a9f538d2ab22bd9df3b">
+      <data key="d0">大连冷冻机股份有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2">冰山冷热</data>
+      <data key="d4">3</data>
+    </node>
+    <node id="q6a0e3b932e39386964687df9a5f3dcb3">
+      <data key="d0">烟台未来自动装备有限责任公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="qa178aa8536e028d1d5572668d7344743">
+      <data key="d0">大连冰山集团有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="qc8e352cbc82b4924af68737206ba39c7">
+      <data key="d0">浙江恒逸石化销售有限公司</data>
+      <data key="d1" />
+      <data key="d2" />
+      <data key="d3">0</data>
+    </node>
+    <node id="qdbb28ead658f26509c71d35c0db7d39c">
+      <data key="d0">浙江恒逸石化有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">1</data>
+    </node>
+    <node id="q506c05ca24ad35544aec2317e4e24958">
+      <data key="d0">恒逸石化股份有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2">恒逸石化</data>
+      <data key="d4">2</data>
+    </node>
+    <node id="qd324d0e379fdb43c94e24fb5ee815ea7">
+      <data key="d0">浙江恒逸集团有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="q99d815b2a496153f9d2772517fb83b6d">
+      <data key="d0">杭州恒逸投资有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="恒逸石化股份有限公司-第六期员工持股计划">
+      <data key="d0">恒逸石化股份有限公司-第六期员工持股计划</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="上海胜帮私募基金管理有限公司-共青城胜帮凯米投资合伙企业（有限合伙）">
+      <data key="d0">上海胜帮私募基金管理有限公司-共青城胜帮凯米投资合伙企业（有限合伙）</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="q026c721b1f464d889a6e9d48b7149f29">
+      <data key="d0">兴惠化纤集团有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="恒逸石化股份有限公司-第五期员工持股计划">
+      <data key="d0">恒逸石化股份有限公司-第五期员工持股计划</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="q63aae46aff62ac777d1103d883f63656">
+      <data key="d0">申万宏源证券有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="杭州博海汇金资产管理有限公司-博海汇金汇鑫8号证券私募投资基金">
+      <data key="d0">杭州博海汇金资产管理有限公司-博海汇金汇鑫8号证券私募投资基金</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="西藏信托有限公司-西藏信托-泓景29号集合资金信托计划">
+      <data key="d0">西藏信托有限公司-西藏信托-泓景29号集合资金信托计划</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="陕西省国际信托股份有限公司-陕国投·恒逸石化控股股东及其附属企业员工持股集合资金信托计划">
+      <data key="d0">陕西省国际信托股份有限公司-陕国投·恒逸石化控股股东及其附属企业员工持股集合资金信托计划</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="天津鼎晖元博股权投资基金">
+      <data key="d0">天津鼎晖元博股权投资基金</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="中国烟草总公司四川公司">
+      <data key="d0">中国烟草总公司四川公司</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="天津鼎晖股权投资一期基金">
+      <data key="d0">天津鼎晖股权投资一期基金</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="四川省石油总公司涪陵分公司等">
+      <data key="d0">四川省石油总公司涪陵分公司等</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="q1303953a2b2c11eebaac00163e355098">
+      <data key="d0">山东恒荣橡胶科技有限公司</data>
+      <data key="d1" />
+      <data key="d2" />
+      <data key="d3">0</data>
+    </node>
+    <node id="刘洪亮">
+      <data key="d0">刘洪亮</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">1</data>
+    </node>
+    <node id="田式超">
+      <data key="d0">田式超</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">1</data>
+    </node>
+    <node id="qf6a006e2b7204672abc22f767cfbd3a2">
+      <data key="d0">浙江宏途供应链管理有限公司</data>
+      <data key="d1" />
+      <data key="d2" />
+      <data key="d3">0</data>
+    </node>
+    <node id="qc54ef82510cb4ceeac827c9d47bb31fb">
+      <data key="d0">杭州乾兴贸易有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">1</data>
+    </node>
+    <node id="qc59fa42a4980ddac34bccfe86a551df3">
+      <data key="d0">浙江良友粮贸有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">1</data>
+    </node>
+    <node id="qd11eb37fb5ddcee6a34b120964779263">
+      <data key="d0">物产中大化工集团有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">2</data>
+    </node>
+    <node id="柯惠英">
+      <data key="d0">柯惠英</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">2</data>
+    </node>
+    <node id="王志蒙">
+      <data key="d0">王志蒙</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="江海燕">
+      <data key="d0">江海燕</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">2</data>
+    </node>
+    <node id="季惠君">
+      <data key="d0">季惠君</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">2</data>
+    </node>
+    <node id="季志君">
+      <data key="d0">季志君</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">2</data>
+    </node>
+    <node id="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d0">宁波梅山保税港区宏新创投资合伙企业（有限合伙）</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="q5cf43fbc80fad22790d334101ce6b391">
+      <data key="d0">物产中大集团股份有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2">物产中大</data>
+      <data key="d4">3</data>
+    </node>
+    <node id="q8c68d6c8b53a4f488581a2cd4dd34e51">
+      <data key="d0">宁波梅山保税港区宏新美投资合伙企业（有限合伙）</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="唐宇清">
+      <data key="d0">唐宇清</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="毛青军">
+      <data key="d0">毛青军</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="储春银">
+      <data key="d0">储春银</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="郭健">
+      <data key="d0">郭健</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="王赛慧">
+      <data key="d0">王赛慧</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="任霄">
+      <data key="d0">任霄</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="方真荣">
+      <data key="d0">方真荣</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="时贞仑">
+      <data key="d0">时贞仑</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="q522d2812423e424e859a8c3cf057c696">
+      <data key="d0">宁波梅山保税港区宏新善投资合伙企业（有限合伙）</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="qcd958990b49440c288cf0ce3fb6a6400">
+      <data key="d0">宁波梅山保税港区宏新业投资合伙企业（有限合伙）</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="q558d1d56844942c599d378aba8aaa68a">
+      <data key="d0">宁波梅山保税港区宏新航投资合伙企业（有限合伙）</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="陈海峰">
+      <data key="d0">陈海峰</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="周剑凌">
+      <data key="d0">周剑凌</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="陈海滨">
+      <data key="d0">陈海滨</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="qcedbd118d72a485ea33e83b20c86d129">
+      <data key="d0">宁波梅山保税港区宏新晖投资合伙企业（有限合伙）</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="q17faa060c10e4adab2ae2e7fd59c7e61">
+      <data key="d0">宁波梅山保税港区宏新真投资管理有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="qd6cd13b84d7f11ee82ec00163e355098">
+      <data key="d0">宁波梅山保税港区宏新汇企业管理合伙企业（有限合伙）</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="张飚">
+      <data key="d0">张飚</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="qca6f5cac214540a7123da22e73b180a2">
+      <data key="d0">浙江省国有资本运营有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="q9f6b5f42352ec962efd8d82f49047f17">
+      <data key="d0">浙江省交通投资集团有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="qbb0db37d1243a0404eaa7dacf298dc92">
+      <data key="d0">浙江省财务开发有限责任公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="浙商证券资管-浙江省国有资本运营有限公司-浙商资管浙江国有上市公司高质量发展单一资产管理计划">
+      <data key="d0">浙商证券资管-浙江省国有资本运营有限公司-浙商资管浙江国有上市公司高质量发展单一资产管理计划</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="q1c203b5ef43811ecbbce00163e0ee983">
+      <data key="d0">浙江浙财资本管理有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="中国农业银行股份有限公司-中证500交易型开放式指数证券投资基金">
+      <data key="d0">中国农业银行股份有限公司-中证500交易型开放式指数证券投资基金</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="上海涌津投资管理有限公司-涌津涌鑫多策略17号私募证券投资基金">
+      <data key="d0">上海涌津投资管理有限公司-涌津涌鑫多策略17号私募证券投资基金</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="上海涌津投资管理有限公司-涌津涌鑫多策略16号私募证券投资基金">
+      <data key="d0">上海涌津投资管理有限公司-涌津涌鑫多策略16号私募证券投资基金</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="陈军">
+      <data key="d0">陈军</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="无限售条件流通股">
+      <data key="d0">无限售条件流通股</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="有限售条件流通股">
+      <data key="d0">有限售条件流通股</data>
+      <data key="d1">UE</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="q13f522eea4ab11eeb66400163e355098">
+      <data key="d0">上海久一国际贸易有限公司</data>
+      <data key="d1" />
+      <data key="d2" />
+      <data key="d3">0</data>
+    </node>
+    <node id="qfe6ef60363b84644a8ceca1208a5ef6b">
+      <data key="d0">浙江益善供应链管理有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">1</data>
+    </node>
+    <node id="qdf3b2963383946eebcbcd4c57c0deb63">
+      <data key="d0">杭州万宜莱科技有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">2</data>
+    </node>
+    <node id="q88337256d61f117a0b37dd422d057993">
+      <data key="d0">宁波辰源环保科技股份有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">2</data>
+    </node>
+    <node id="沈颖华">
+      <data key="d0">沈颖华</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="q83ef7642ae1e81e5ce68380ebd88671d">
+      <data key="d0">宁波华晨环境工程有限公司（发起人）</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="葛丽娜">
+      <data key="d0">葛丽娜</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="王掌权（发起人）">
+      <data key="d0">王掌权（发起人）</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="q40e5d6d4b61f63d81612af77aaae21c3">
+      <data key="d0">山东寿光鲁清石化有限公司</data>
+      <data key="d1" />
+      <data key="d2" />
+      <data key="d3">0</data>
+    </node>
+    <node id="qffea752789a0e87b9ddd04cdc85cfc8c">
+      <data key="d0">寿光市友邦化工有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">1</data>
+    </node>
+    <node id="王河清">
+      <data key="d0">王河清</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">1</data>
+    </node>
+    <node id="王建清">
+      <data key="d0">王建清</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">2</data>
+    </node>
+    <node id="侯乐友">
+      <data key="d0">侯乐友</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">2</data>
+    </node>
+    <node id="王学清">
+      <data key="d0">王学清</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">1</data>
+    </node>
+    <node id="王金友">
+      <data key="d0">王金友</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">2</data>
+    </node>
+    <node id="侯效梅">
+      <data key="d0">侯效梅</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">2</data>
+    </node>
+    <node id="徐汝增">
+      <data key="d0">徐汝增</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">2</data>
+    </node>
+    <node id="qff3ad5f2a99c11ecb44600163e0ee983">
+      <data key="d0">新创云联产业发展有限公司</data>
+      <data key="d1" />
+      <data key="d2" />
+      <data key="d3">0</data>
+    </node>
+    <node id="qd554385addeb4278db733733bac68557">
+      <data key="d0">新希望化工投资有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">1</data>
+    </node>
+    <node id="q9b4e2c574cf4a3c4cf23159dcbf8a0fa">
+      <data key="d0">新希望投资集团有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">2</data>
+    </node>
+    <node id="qd48c914853f177efc7a6ddd8bb95a522">
+      <data key="d0">新希望集团有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">2</data>
+    </node>
+    <node id="q994ba7f725cc45809fd951b53cc30034">
+      <data key="d0">新希望控股集团有限公司</data>
+      <data key="d1">E</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="李巍">
+      <data key="d0">李巍</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="刘永好">
+      <data key="d0">刘永好</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <node id="刘畅">
+      <data key="d0">刘畅</data>
+      <data key="d1">P</data>
+      <data key="d2" />
+      <data key="d4">3</data>
+    </node>
+    <edge source="q53439a653c3545c2bb6d2b17ef3009a5" target="q5d6c6e2ee5e04a76af906869b8db252e">
+      <data key="d5">10000.000000万元</data>
+      <data key="d6">100.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="王云娟" target="q53439a653c3545c2bb6d2b17ef3009a5">
+      <data key="d5">1900.000000万元</data>
+      <data key="d6">95.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="章立" target="q53439a653c3545c2bb6d2b17ef3009a5">
+      <data key="d5">100.000000万元</data>
+      <data key="d6">5.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q91ad208643d20e24aaddc2e0442951f3" target="q51d63cb97ad56fe0677663d6894f382d">
+      <data key="d5">589000.000000万元</data>
+      <data key="d6">100.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qeb3d76b013bfb3a02fb7de2779f9073c" target="q91ad208643d20e24aaddc2e0442951f3">
+      <data key="d5">627000.000000万元</data>
+      <data key="d6">100.00%</data>
+      <data key="d7">原工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q24a4a64e9e66b9da9074272e14f190fa" target="qeb3d76b013bfb3a02fb7de2779f9073c">
+      <data key="d5">2100612342股</data>
+      <data key="d6">29.84%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q39ddf61faffb427f3b8a055d8f930300" target="qeb3d76b013bfb3a02fb7de2779f9073c">
+      <data key="d5">1498478926股</data>
+      <data key="d6">21.29%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="范红卫" target="qeb3d76b013bfb3a02fb7de2779f9073c">
+      <data key="d5">791494169股</data>
+      <data key="d6">11.24%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="德诚利国际集团有限公司" target="qeb3d76b013bfb3a02fb7de2779f9073c">
+      <data key="d5">732711668股</data>
+      <data key="d6">10.41%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="香港中央结算有限公司" target="qeb3d76b013bfb3a02fb7de2779f9073c">
+      <data key="d5">215871757股</data>
+      <data key="d6">3.07%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="香港中央结算有限公司" target="q5cf43fbc80fad22790d334101ce6b391">
+      <data key="d5">114207999股</data>
+      <data key="d6">2.20%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="玄元私募基金投资管理（广东）有限公司-玄元元宝16号私募证券投资基金" target="qeb3d76b013bfb3a02fb7de2779f9073c">
+      <data key="d5">82600783股</data>
+      <data key="d6">1.17%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q798313c3f322e9e78ec3e761dd1c46e0" target="qeb3d76b013bfb3a02fb7de2779f9073c">
+      <data key="d5">68898123股</data>
+      <data key="d6">0.98%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="玄元私募基金投资管理（广东）有限公司-玄元元宝17号私募证券投资基金" target="qeb3d76b013bfb3a02fb7de2779f9073c">
+      <data key="d5">66297823股</data>
+      <data key="d6">0.94%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="玄元私募基金投资管理（广东）有限公司-玄元元宝18号私募证券投资基金" target="qeb3d76b013bfb3a02fb7de2779f9073c">
+      <data key="d5">64783284股</data>
+      <data key="d6">0.92%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qc28d623a7013cdad35d346e9c427197e" target="qeb3d76b013bfb3a02fb7de2779f9073c">
+      <data key="d5">61952065股</data>
+      <data key="d6">0.88%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qfd8502ce71683f1517b664bcd0ff409a" target="qeb3d76b013bfb3a02fb7de2779f9073c">
+      <data key="d5">32.500000万元</data>
+      <data key="d6">0.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q634b60d18735a97d00437ab3602e0102" target="qeb3d76b013bfb3a02fb7de2779f9073c">
+      <data key="d5">52.000000万元</data>
+      <data key="d6">0.01%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qf7555e5d4aad7a9f538d2ab22bd9df3b" target="qeb3d76b013bfb3a02fb7de2779f9073c">
+      <data key="d5">150.000000万元</data>
+      <data key="d6">0.02%</data>
+      <data key="d7">原工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q6a0e3b932e39386964687df9a5f3dcb3" target="qeb3d76b013bfb3a02fb7de2779f9073c">
+      <data key="d5">32.500000万元</data>
+      <data key="d6">0.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qa178aa8536e028d1d5572668d7344743" target="qeb3d76b013bfb3a02fb7de2779f9073c">
+      <data key="d5">6733.000000万元</data>
+      <data key="d6">0.96%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qdbb28ead658f26509c71d35c0db7d39c" target="qc8e352cbc82b4924af68737206ba39c7">
+      <data key="d5">5000.000000万元</data>
+      <data key="d6">100.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q506c05ca24ad35544aec2317e4e24958" target="qdbb28ead658f26509c71d35c0db7d39c">
+      <data key="d5">300000.000000万元</data>
+      <data key="d6">100.00%</data>
+      <data key="d7">原工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qd324d0e379fdb43c94e24fb5ee815ea7" target="q506c05ca24ad35544aec2317e4e24958">
+      <data key="d5">1506383108股</data>
+      <data key="d6">41.09%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q99d815b2a496153f9d2772517fb83b6d" target="q506c05ca24ad35544aec2317e4e24958">
+      <data key="d5">256338027股</data>
+      <data key="d6">6.99%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="恒逸石化股份有限公司-第六期员工持股计划" target="q506c05ca24ad35544aec2317e4e24958">
+      <data key="d5">114090297股</data>
+      <data key="d6">3.11%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="上海胜帮私募基金管理有限公司-共青城胜帮凯米投资合伙企业（有限合伙）" target="q506c05ca24ad35544aec2317e4e24958">
+      <data key="d5">98111801股</data>
+      <data key="d6">2.68%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q026c721b1f464d889a6e9d48b7149f29" target="q506c05ca24ad35544aec2317e4e24958">
+      <data key="d5">97662383股</data>
+      <data key="d6">2.66%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="恒逸石化股份有限公司-第五期员工持股计划" target="q506c05ca24ad35544aec2317e4e24958">
+      <data key="d5">87167750股</data>
+      <data key="d6">2.38%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q63aae46aff62ac777d1103d883f63656" target="q506c05ca24ad35544aec2317e4e24958">
+      <data key="d5">71250287股</data>
+      <data key="d6">1.94%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="杭州博海汇金资产管理有限公司-博海汇金汇鑫8号证券私募投资基金" target="q506c05ca24ad35544aec2317e4e24958">
+      <data key="d5">49936900股</data>
+      <data key="d6">1.36%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="西藏信托有限公司-西藏信托-泓景29号集合资金信托计划" target="q506c05ca24ad35544aec2317e4e24958">
+      <data key="d5">47841104股</data>
+      <data key="d6">1.30%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="陕西省国际信托股份有限公司-陕国投·恒逸石化控股股东及其附属企业员工持股集合资金信托计划" target="q506c05ca24ad35544aec2317e4e24958">
+      <data key="d5">40368100股</data>
+      <data key="d6">1.10%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="天津鼎晖元博股权投资基金" target="q506c05ca24ad35544aec2317e4e24958">
+      <data key="d5">761.875500万元</data>
+      <data key="d6">0.21%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="中国烟草总公司四川公司" target="q506c05ca24ad35544aec2317e4e24958">
+      <data key="d5">284.310000万元</data>
+      <data key="d6">0.08%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="天津鼎晖股权投资一期基金" target="q506c05ca24ad35544aec2317e4e24958">
+      <data key="d5">2701.195000万元</data>
+      <data key="d6">0.74%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="四川省石油总公司涪陵分公司等" target="q506c05ca24ad35544aec2317e4e24958">
+      <data key="d5">14106.690000万元</data>
+      <data key="d6">3.85%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="刘洪亮" target="q1303953a2b2c11eebaac00163e355098">
+      <data key="d5">800.000000万元</data>
+      <data key="d6">80.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="田式超" target="q1303953a2b2c11eebaac00163e355098">
+      <data key="d5">200.000000万元</data>
+      <data key="d6">20.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qc54ef82510cb4ceeac827c9d47bb31fb" target="qf6a006e2b7204672abc22f767cfbd3a2">
+      <data key="d5">900.000000万元</data>
+      <data key="d6">45.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qc59fa42a4980ddac34bccfe86a551df3" target="qf6a006e2b7204672abc22f767cfbd3a2">
+      <data key="d5">220.000000万元</data>
+      <data key="d6">11.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qd11eb37fb5ddcee6a34b120964779263" target="qf6a006e2b7204672abc22f767cfbd3a2">
+      <data key="d5">880.000000万元</data>
+      <data key="d6">44.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qd11eb37fb5ddcee6a34b120964779263" target="qfe6ef60363b84644a8ceca1208a5ef6b">
+      <data key="d5">440.000000万元</data>
+      <data key="d6">44.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="柯惠英" target="qc54ef82510cb4ceeac827c9d47bb31fb">
+      <data key="d5">900.000000万元</data>
+      <data key="d6">30.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="王志蒙" target="qc54ef82510cb4ceeac827c9d47bb31fb">
+      <data key="d5">2100.000000万元</data>
+      <data key="d6">70.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="王志蒙" target="qdf3b2963383946eebcbcd4c57c0deb63">
+      <data key="d5">333.330000万元</data>
+      <data key="d6">33.33%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="江海燕" target="qc59fa42a4980ddac34bccfe86a551df3">
+      <data key="d5">130.000000万元</data>
+      <data key="d6">2.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="季惠君" target="qc59fa42a4980ddac34bccfe86a551df3">
+      <data key="d5">5525.000000万元</data>
+      <data key="d6">85.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="季志君" target="qc59fa42a4980ddac34bccfe86a551df3">
+      <data key="d5">845.000000万元</data>
+      <data key="d6">13.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q60024c73c3dc4f22ba543a8595daaf44" target="qd11eb37fb5ddcee6a34b120964779263">
+      <data key="d5">10000.000000万元</data>
+      <data key="d6">20.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q5cf43fbc80fad22790d334101ce6b391" target="qd11eb37fb5ddcee6a34b120964779263">
+      <data key="d5">40000.000000万元</data>
+      <data key="d6">80.00%</data>
+      <data key="d7">原工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q8c68d6c8b53a4f488581a2cd4dd34e51" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">3126.074000万元</data>
+      <data key="d6">18.39%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="唐宇清" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">883.386000万元</data>
+      <data key="d6">5.20%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="毛青军" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">219.453900万元</data>
+      <data key="d6">1.29%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="储春银" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">180.000000万元</data>
+      <data key="d6">1.06%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="郭健" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">883.386000万元</data>
+      <data key="d6">5.20%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="王赛慧" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">720.000000万元</data>
+      <data key="d6">4.24%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="任霄" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">226.000000万元</data>
+      <data key="d6">1.33%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="方真荣" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">170.570200万元</data>
+      <data key="d6">1.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="时贞仑" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">883.386000万元</data>
+      <data key="d6">5.20%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q522d2812423e424e859a8c3cf057c696" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">1851.943800万元</data>
+      <data key="d6">10.89%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qcd958990b49440c288cf0ce3fb6a6400" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">1096.643000万元</data>
+      <data key="d6">6.45%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q558d1d56844942c599d378aba8aaa68a" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">748.138900万元</data>
+      <data key="d6">4.40%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="陈海峰" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">720.000000万元</data>
+      <data key="d6">4.24%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="周剑凌" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">265.011700万元</data>
+      <data key="d6">1.56%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="陈海滨" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">1440.000000万元</data>
+      <data key="d6">8.47%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qcedbd118d72a485ea33e83b20c86d129" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">627.987500万元</data>
+      <data key="d6">3.69%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q17faa060c10e4adab2ae2e7fd59c7e61" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">8.000000万元</data>
+      <data key="d6">0.05%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qd6cd13b84d7f11ee82ec00163e355098" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">370.165600万元</data>
+      <data key="d6">2.18%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="张飚" target="q60024c73c3dc4f22ba543a8595daaf44">
+      <data key="d5">2579.853400万元</data>
+      <data key="d6">15.18%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qca6f5cac214540a7123da22e73b180a2" target="q5cf43fbc80fad22790d334101ce6b391">
+      <data key="d5">1320343025股</data>
+      <data key="d6">25.43%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q9f6b5f42352ec962efd8d82f49047f17" target="q5cf43fbc80fad22790d334101ce6b391">
+      <data key="d5">892384585股</data>
+      <data key="d6">17.19%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qbb0db37d1243a0404eaa7dacf298dc92" target="q5cf43fbc80fad22790d334101ce6b391">
+      <data key="d5">145599591股</data>
+      <data key="d6">2.80%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="浙商证券资管-浙江省国有资本运营有限公司-浙商资管浙江国有上市公司高质量发展单一资产管理计划" target="q5cf43fbc80fad22790d334101ce6b391">
+      <data key="d5">119923800股</data>
+      <data key="d6">2.31%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q1c203b5ef43811ecbbce00163e0ee983" target="q5cf43fbc80fad22790d334101ce6b391">
+      <data key="d5">41659863股</data>
+      <data key="d6">0.80%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="中国农业银行股份有限公司-中证500交易型开放式指数证券投资基金" target="q5cf43fbc80fad22790d334101ce6b391">
+      <data key="d5">40085227股</data>
+      <data key="d6">0.77%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="上海涌津投资管理有限公司-涌津涌鑫多策略17号私募证券投资基金" target="q5cf43fbc80fad22790d334101ce6b391">
+      <data key="d5">39199900股</data>
+      <data key="d6">0.75%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="上海涌津投资管理有限公司-涌津涌鑫多策略16号私募证券投资基金" target="q5cf43fbc80fad22790d334101ce6b391">
+      <data key="d5">33719900股</data>
+      <data key="d6">0.65%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="陈军" target="q5cf43fbc80fad22790d334101ce6b391">
+      <data key="d5">25372078股</data>
+      <data key="d6">0.49%</data>
+      <data key="d7">十大股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="无限售条件流通股" target="q5cf43fbc80fad22790d334101ce6b391">
+      <data key="d5">511478.204000万元</data>
+      <data key="d6">98.50%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="有限售条件流通股" target="q5cf43fbc80fad22790d334101ce6b391">
+      <data key="d5">7858.000000万元</data>
+      <data key="d6">1.51%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qfe6ef60363b84644a8ceca1208a5ef6b" target="q13f522eea4ab11eeb66400163e355098">
+      <data key="d5">2000.000000万元</data>
+      <data key="d6">100.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qdf3b2963383946eebcbcd4c57c0deb63" target="qfe6ef60363b84644a8ceca1208a5ef6b">
+      <data key="d5">450.000000万元</data>
+      <data key="d6">45.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q88337256d61f117a0b37dd422d057993" target="qfe6ef60363b84644a8ceca1208a5ef6b">
+      <data key="d5">110.000000万元</data>
+      <data key="d6">11.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="沈颖华" target="qdf3b2963383946eebcbcd4c57c0deb63">
+      <data key="d5">666.670000万元</data>
+      <data key="d6">66.67%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q83ef7642ae1e81e5ce68380ebd88671d" target="q88337256d61f117a0b37dd422d057993">
+      <data key="d5" />
+      <data key="d6" />
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="葛丽娜" target="q88337256d61f117a0b37dd422d057993">
+      <data key="d5">408.000000万元</data>
+      <data key="d6">51.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="王掌权（发起人）" target="q88337256d61f117a0b37dd422d057993">
+      <data key="d5">392.000000万元</data>
+      <data key="d6">49.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qffea752789a0e87b9ddd04cdc85cfc8c" target="q40e5d6d4b61f63d81612af77aaae21c3">
+      <data key="d5">4000.000000万元</data>
+      <data key="d6">26.67%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="王河清" target="q40e5d6d4b61f63d81612af77aaae21c3">
+      <data key="d5">2000.000000万元</data>
+      <data key="d6">13.33%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="王建清" target="q40e5d6d4b61f63d81612af77aaae21c3">
+      <data key="d5">1000.000000万元</data>
+      <data key="d6">6.67%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="王建清" target="qffea752789a0e87b9ddd04cdc85cfc8c">
+      <data key="d5">150.000000万元</data>
+      <data key="d6">15.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="侯乐友" target="q40e5d6d4b61f63d81612af77aaae21c3">
+      <data key="d5">1000.000000万元</data>
+      <data key="d6">6.67%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="侯乐友" target="qffea752789a0e87b9ddd04cdc85cfc8c">
+      <data key="d5">150.000000万元</data>
+      <data key="d6">15.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="王学清" target="q40e5d6d4b61f63d81612af77aaae21c3">
+      <data key="d5">7000.000000万元</data>
+      <data key="d6">46.67%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="王金友" target="qffea752789a0e87b9ddd04cdc85cfc8c">
+      <data key="d5">100.000000万元</data>
+      <data key="d6">10.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="侯效梅" target="qffea752789a0e87b9ddd04cdc85cfc8c">
+      <data key="d5">150.000000万元</data>
+      <data key="d6">15.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="徐汝增" target="qffea752789a0e87b9ddd04cdc85cfc8c">
+      <data key="d5">450.000000万元</data>
+      <data key="d6">45.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qd554385addeb4278db733733bac68557" target="qff3ad5f2a99c11ecb44600163e0ee983">
+      <data key="d5">10000.000000万元</data>
+      <data key="d6">100.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q9b4e2c574cf4a3c4cf23159dcbf8a0fa" target="qd554385addeb4278db733733bac68557">
+      <data key="d5">205000.000000万元</data>
+      <data key="d6">75.42%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="qd48c914853f177efc7a6ddd8bb95a522" target="qd554385addeb4278db733733bac68557">
+      <data key="d5">66802.179100万元</data>
+      <data key="d6">24.58%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q994ba7f725cc45809fd951b53cc30034" target="q9b4e2c574cf4a3c4cf23159dcbf8a0fa">
+      <data key="d5">70000.000000万元</data>
+      <data key="d6">100.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="q994ba7f725cc45809fd951b53cc30034" target="qd48c914853f177efc7a6ddd8bb95a522">
+      <data key="d5">240000.000000万元</data>
+      <data key="d6">75.00%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="李巍" target="qd48c914853f177efc7a6ddd8bb95a522">
+      <data key="d5">4192.060000万元</data>
+      <data key="d6">1.31%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="刘永好" target="qd48c914853f177efc7a6ddd8bb95a522">
+      <data key="d5">46725.550000万元</data>
+      <data key="d6">14.60%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+    <edge source="刘畅" target="qd48c914853f177efc7a6ddd8bb95a522">
+      <data key="d5">29082.390000万元</data>
+      <data key="d6">9.09%</data>
+      <data key="d7">工商股东</data>
+      <data key="d8">parent_id_field</data>
+    </edge>
+  </graph>
+</graphml>
