@@ -3,6 +3,52 @@ import pandas as pd
 import networkx as nx
 import json
 
+# 新增辅助函数：规范化百分比数据
+def _normalize_percent(value):
+    """
+    将各种格式的百分比值规范化为0.0到1.0之间的小数。
+    如果无法解析，则返回 None。
+    """
+    if value is None:
+        return None
+    if isinstance(value, (int, float)):
+        if 0 <= value <= 1: # 假设已经是0-1之间的小数
+            return float(value)
+        elif 1 < value <= 100: # 假设是1-100之间的百分比数字
+             return float(value) / 100.0
+        else: # 其他范围的数字，可能代表错误或特殊含义，暂定为None
+            # print(f"GraphBuilder Warn: Numeric percent value {value} is out of expected range (0-1 or 1-100), treating as None.")
+            return None 
+    
+    if isinstance(value, str):
+        original_value_str = value # 保存原始字符串用于可能的警告
+        value = value.strip()
+        if not value: # 空字符串
+            return None
+        
+        has_percent_symbol = value.endswith('%')
+        if has_percent_symbol:
+            value = value[:-1].strip() # 去掉百分号
+
+        try:
+            num_val = float(value)
+            if has_percent_symbol: # 如果原始有百分号，直接除以100
+                return num_val / 100.0
+            else: # 如果原始没有百分号
+                if 0 <= num_val <= 1: # 已经是0-1的小数
+                    return num_val
+                elif 1 < num_val <= 100: # 是1-100的数字，当作百分比
+                    return num_val / 100.0
+                else: # 其他范围，视为无效
+                    # print(f"GraphBuilder Warn: String percent value '{original_value_str}' (parsed as {num_val}) is out of expected range, treating as None.")
+                    return None
+        except ValueError:
+            # print(f"GraphBuilder Warn: Could not convert percent string '{original_value_str}' to float, treating as None.")
+            return None # 无法转换为浮点数
+    
+    # print(f"GraphBuilder Warn: Unhandled percent value type: {value} (type: {type(value)}), treating as None.")
+    return None # 其他未处理的类型
+
 # 辅助函数，用于递归解析children字段并添加节点和边
 def _parse_children_recursive(main_row_entity_id, children_data, graph):
     if isinstance(children_data, str):
@@ -59,7 +105,7 @@ def _parse_children_recursive(main_row_entity_id, children_data, graph):
         # 添加从股东 (shareholder_node_id from JSON) 到被投资公司 (main_row_entity_id) 的边
         edge_attrs = {
             'amount': child_info_from_json.get('amount', ''),
-            'percent': child_info_from_json.get('percent', ''),
+            'percent': _normalize_percent(child_info_from_json.get('percent')), # 使用规范化函数
             'sh_type': child_info_from_json.get('sh_type', ''),
             'source_info': 'children_field' # Mark that this edge came from children field
         }
@@ -116,19 +162,14 @@ def build_graph(csv_path='三层股权穿透输出数据.csv'):
             parent_id_val = row.get('parent_id')
             if pd.notna(parent_id_val) and parent_id_val != '':
                 # 如果父节点不存在，暂时不创建，期望它有自己的主行数据
-                # if not G.has_node(parent_id_val):
-                # G.add_node(parent_id_val, name=f"Deferred Parent ({parent_id_val})") # 占位符
                 edge_attrs = {
                     'amount': row['amount'] if pd.notna(row['amount']) else '',
-                    'percent': row['percent'] if pd.notna(row['percent']) else '',
+                    'percent': _normalize_percent(row.get('percent')), # 使用规范化函数
                     'sh_type': row['sh_type'] if pd.notna(row['sh_type']) else '',
                     'source_info': 'parent_id_field' # Mark that this edge came from parent_id
                 }
                 # If parent_id_val node doesn't exist, it will be created by add_edge
-                # Or, we can pre-add it if we want to control its attributes more finely if it's only mentioned as a parent_id
                 if not G.has_node(parent_id_val):
-                     # Add a basic node for parent_id if it doesn't exist yet
-                     # Its full attributes might be defined if/when it appears as a main row itself
                      G.add_node(parent_id_val, name=str(parent_id_val)) # Simplified name for now
                 # MODIFIED EDGE DIRECTION HERE: current_node_id (Child) -> parent_id_val (Parent)
                 if not G.has_edge(current_node_id, parent_id_val):
@@ -158,5 +199,8 @@ if __name__ == '__main__':
     # print(f"  {node}: {data}")
     # print("Graph edges:")
     # for u, v, data in list(graph.edges(data=True))[:5]:
-    # print(f"  {u} -> {v}: {data}")
+    #     if 'percent' in data:
+    #         print(f"  {u} -> {v}: percent={data['percent']} (type: {type(data['percent'])})")
+    #     else:
+    #         print(f"  {u} -> {v}: {data}")
     print(f"Test graph has {graph.number_of_nodes()} nodes and {graph.number_of_edges()} edges.") 
