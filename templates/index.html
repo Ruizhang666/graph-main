@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>股权关系分析系统</title>
+    <!-- 引入Element UI -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div id="app">
+        <el-container>
+            <el-header height="60px">
+                <h1>股权关系分析系统</h1>
+            </el-header>
+            
+            <el-container>
+                <el-aside width="300px">
+                    <!-- 搜索组件 -->
+                    <div class="search-box">
+                        <h3>公司查询</h3>
+                        <el-input 
+                            placeholder="请输入公司名称" 
+                            v-model="searchQuery" 
+                            @keyup.enter.native="searchCompany">
+                            <el-button slot="append" icon="el-icon-search" @click="searchCompany"></el-button>
+                        </el-input>
+                        
+                        <!-- 搜索结果 -->
+                        <div v-if="searchResults.length > 0" class="search-results">
+                            <h4>搜索结果：</h4>
+                            <el-table :data="searchResults" @row-click="selectCompany" style="width: 100%">
+                                <el-table-column prop="name" label="名称"></el-table-column>
+                                <el-table-column prop="type" label="类型" width="60"></el-table-column>
+                            </el-table>
+                        </div>
+                        
+                        <div v-if="searchError" class="search-error">
+                            <el-alert :title="searchError" type="error" :closable="false"></el-alert>
+                        </div>
+                    </div>
+                    
+                    <!-- 当前选中公司信息 -->
+                    <div v-if="currentCompany" class="company-info">
+                        <h3>{{ currentCompany.name }}</h3>
+                        <p>
+                            <strong>类型：</strong> <span v-if="currentCompany.type === 'P'">个人</span>
+                                <span v-else-if="currentCompany.type === 'E'">企业</span>
+                                <span v-else>{{ currentCompany.type || '未知' }}</span><br>
+                            <strong>级别：</strong> {{ currentCompany.level || '未知' }}<br>
+                            <strong>简称：</strong> {{ currentCompany.short_name || '无' }}
+                        </p>
+                        
+                        <!-- 投资方 -->
+                        <div v-if="currentCompany.investors && currentCompany.investors.length > 0">
+                            <h4>投资方 ({{ currentCompany.investors.length }})</h4>
+                            <el-table :data="currentCompany.investors" size="mini" @row-click="selectRelatedCompany">
+                                <el-table-column prop="name" label="名称"></el-table-column>
+                                <el-table-column prop="percent" label="持股比例" width="90"></el-table-column>
+                            </el-table>
+                        </div>
+                        
+                        <!-- 被投资企业 -->
+                        <div v-if="currentCompany.investees && currentCompany.investees.length > 0">
+                            <h4>被投资企业 ({{ currentCompany.investees.length }})</h4>
+                            <el-table :data="currentCompany.investees" size="mini" @row-click="selectRelatedCompany">
+                                <el-table-column prop="name" label="名称"></el-table-column>
+                                <el-table-column prop="percent" label="持股比例" width="90"></el-table-column>
+                            </el-table>
+                        </div>
+                    </div>
+                </el-aside>
+                
+                <el-container>
+                    <el-main>
+                        <el-tabs v-model="activeTab" type="card">
+                            <!-- 图分析概览 -->
+                            <el-tab-pane label="分析概览" name="overview">
+                                <div class="overview-container">
+                                    <el-card class="overview-card">
+                                        <div slot="header"><h3>基本统计</h3></div>
+                                        <div v-if="graphStats">
+                                            <p><strong>节点总数：</strong>{{ graphStats.node_count }}</p>
+                                            <p><strong>边总数：</strong>{{ graphStats.edge_count }}</p>
+                                        </div>
+                                        <div v-else>
+                                            <el-skeleton :rows="2" animated />
+                                        </div>
+                                    </el-card>
+                                    
+                                    <el-card class="overview-card">
+                                        <div slot="header"><h3>被投资最多的实体 (Top 5)</h3></div>
+                                        <div v-if="graphStats && graphStats.top_in_degree">
+                                            <el-table :data="graphStats.top_in_degree" size="mini">
+                                                <el-table-column prop="name" label="名称"></el-table-column>
+                                                <el-table-column prop="degree" label="被投资数" width="80"></el-table-column>
+                                            </el-table>
+                                        </div>
+                                        <div v-else>
+                                            <el-skeleton :rows="5" animated />
+                                        </div>
+                                    </el-card>
+                                    
+                                    <el-card class="overview-card">
+                                        <div slot="header"><h3>投资最多的实体 (Top 5)</h3></div>
+                                        <div v-if="graphStats && graphStats.top_out_degree">
+                                            <el-table :data="graphStats.top_out_degree" size="mini">
+                                                <el-table-column prop="name" label="名称"></el-table-column>
+                                                <el-table-column prop="degree" label="投资数" width="80"></el-table-column>
+                                            </el-table>
+                                        </div>
+                                        <div v-else>
+                                            <el-skeleton :rows="5" animated />
+                                        </div>
+                                    </el-card>
+                                    
+                                    <el-card class="overview-card">
+                                        <div slot="header"><h3>PageRank中心性 (Top 5)</h3></div>
+                                        <div v-if="graphStats && graphStats.top_pagerank">
+                                            <el-table :data="graphStats.top_pagerank" size="mini">
+                                                <el-table-column prop="name" label="名称"></el-table-column>
+                                                <el-table-column prop="score" label="PageRank值" width="100">
+                                                    <template slot-scope="scope">
+                                                        {{ scope.row.score.toFixed(8) }}
+                                                    </template>
+                                                </el-table-column>
+                                            </el-table>
+                                        </div>
+                                        <div v-else>
+                                            <el-skeleton :rows="5" animated />
+                                        </div>
+                                    </el-card>
+                                    
+                                    <el-card class="overview-card">
+                                        <div slot="header"><h3>度中心性 (Top 5)</h3></div>
+                                        <div v-if="graphStats && graphStats.top_degree_centrality">
+                                            <el-table :data="graphStats.top_degree_centrality" size="mini">
+                                                <el-table-column prop="name" label="名称"></el-table-column>
+                                                <el-table-column prop="score" label="度中心性" width="100">
+                                                    <template slot-scope="scope">
+                                                        {{ scope.row.score.toFixed(8) }}
+                                                    </template>
+                                                </el-table-column>
+                                            </el-table>
+                                        </div>
+                                        <div v-else>
+                                            <el-skeleton :rows="5" animated />
+                                        </div>
+                                    </el-card>
+                                    
+                                    <el-card class="overview-card" v-if="graphStats && graphStats.cycles && graphStats.cycles.length > 0">
+                                        <div slot="header"><h3>循环持股关系</h3></div>
+                                        <div>
+                                            <div v-for="(cycle, index) in graphStats.cycles" :key="index" class="cycle-item">
+                                                <h4>循环 {{ index + 1 }}</h4>
+                                                <el-tag v-for="(node, nodeIndex) in cycle" :key="nodeIndex" type="info" effect="plain" class="cycle-node-tag">
+                                                    {{ node }}
+                                                    <i class="el-icon-arrow-right" v-if="nodeIndex < cycle.length - 1"></i>
+                                                </el-tag>
+                                                <el-tag type="info" effect="plain" class="cycle-node-tag">
+                                                    <i class="el-icon-arrow-right"></i> {{ cycle[0] }}
+                                                </el-tag>
+                                            </div>
+                                        </div>
+                                    </el-card>
+                                </div>
+                            </el-tab-pane>
+                            
+                            <!-- 投资关系详情 -->
+                            <el-tab-pane label="投资关系详情" name="investor_details" v-if="currentCompany">
+                                <el-card v-if="currentCompany.investors && currentCompany.investors.length > 0">
+                                    <div slot="header">
+                                        <h3>{{ currentCompany.name }} 的投资方画像</h3>
+                                    </div>
+                                    <div>
+                                        <el-table 
+                                            :data="investorsWithDetails" 
+                                            style="width: 100%" 
+                                            v-loading="loadingInvestorDetails"
+                                            :row-class-name="getRowClassName"
+                                            highlight-current-row>
+                                            <el-table-column prop="name" label="投资方名称" width="180"></el-table-column>
+                                            <el-table-column prop="type" label="类型" width="100">
+                                                <template slot-scope="scope">
+                                                    <el-tag size="mini" :type="scope.row.type === 'P' ? 'info' : 'success'">
+                                                        {{ scope.row.type === 'P' ? '个人' : scope.row.type === 'E' ? '企业' : scope.row.type === 'UE' ? '境外企业' : scope.row.type || '未知' }}
+                                                    </el-tag>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column prop="percent" label="持股比例" width="100"></el-table-column>
+                                            <el-table-column prop="pagerank" label="PageRank" width="120">
+                                                <template slot-scope="scope">
+                                                    <span v-if="scope.row.pagerank !== null && scope.row.pagerank !== undefined">
+                                                        {{ scope.row.pagerank.toFixed(8) }}
+                                                    </span>
+                                                    <span v-else>未知</span>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column prop="outdegree" label="投资数" width="80"></el-table-column>
+                                            <el-table-column prop="indegree" label="被投资数" width="90"></el-table-column>
+                                            <el-table-column label="操作" width="180">
+                                                <template slot-scope="scope">
+                                                    <el-button 
+                                                        @click="selectInvestorDetails(scope.row)" 
+                                                        type="text" 
+                                                        size="small">
+                                                        查看详情
+                                                    </el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                    </div>
+                                </el-card>
+                                
+                                <el-empty description="该公司没有投资方信息" v-else></el-empty>
+                                
+                                <!-- 公司投资的企业 -->
+                                <el-card v-if="currentCompany.investees && currentCompany.investees.length > 0" style="margin-top: 20px;">
+                                    <div slot="header">
+                                        <h3>{{ currentCompany.name }} 的被投资企业</h3>
+                                    </div>
+                                    <div>
+                                        <el-table :data="currentCompany.investees" style="width: 100%" v-loading="loadingInvestorDetails">
+                                            <el-table-column prop="name" label="企业名称" width="180"></el-table-column>
+                                            <el-table-column prop="type" label="类型" width="100">
+                                                <template slot-scope="scope">
+                                                    <el-tag size="mini" :type="scope.row.type === 'P' ? 'info' : 'success'">
+                                                        {{ scope.row.type === 'P' ? '个人' : scope.row.type === 'E' ? '企业' : scope.row.type === 'UE' ? '境外企业' : scope.row.type || '未知' }}
+                                                    </el-tag>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column prop="percent" label="持股比例" width="100"></el-table-column>
+                                            <el-table-column prop="pagerank" label="PageRank" width="120">
+                                                <template slot-scope="scope">
+                                                    <span v-if="scope.row.pagerank !== null && scope.row.pagerank !== undefined">
+                                                        {{ scope.row.pagerank.toFixed(8) }}
+                                                    </span>
+                                                    <span v-else>未知</span>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column label="操作" width="100">
+                                                <template slot-scope="scope">
+                                                    <el-button 
+                                                        @click="selectCompanyById(scope.row.id)" 
+                                                        type="text" 
+                                                        size="small">
+                                                        查看详情
+                                                    </el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                    </div>
+                                </el-card>
+                                
+                                <!-- 当前选中投资方的详细信息 -->
+                                <el-card v-if="selectedInvestor" style="margin-top: 20px;" id="investor-details-card">
+                                    <div slot="header">
+                                        <h3>{{ selectedInvestor.name }} 的基本信息</h3>
+                                    </div>
+                                    <div>
+                                        <el-row :gutter="20">
+                                            <el-col :span="12">
+                                                <p><strong>类型：</strong> {{ selectedInvestor.type === 'P' ? '个人' : selectedInvestor.type === 'E' ? '企业' : selectedInvestor.type === 'UE' ? '境外企业' : selectedInvestor.type || '未知' }}</p>
+                                                <p><strong>级别：</strong> {{ selectedInvestor.level || '未知' }}</p>
+                                                <p><strong>对{{ currentCompany.name }}的持股比例：</strong> {{ selectedInvestor.percent }}</p>
+                                            </el-col>
+                                            <el-col :span="12">
+                                                <p><strong>PageRank：</strong> 
+                                                    <span v-if="selectedInvestor.pagerank !== null && selectedInvestor.pagerank !== undefined">
+                                                        {{ selectedInvestor.pagerank.toFixed(8) }}
+                                                    </span>
+                                                    <span v-else>未知</span>
+                                                </p>
+                                                <p><strong>投资数：</strong> {{ selectedInvestor.outdegree || 0 }}</p>
+                                                <p><strong>被投资数：</strong> {{ selectedInvestor.indegree || 0 }}</p>
+                                                <p v-if="selectedInvestor.degree_centrality !== null && selectedInvestor.degree_centrality !== undefined">
+                                                    <strong>度中心性：</strong> {{ selectedInvestor.degree_centrality.toFixed(8) }}
+                                                </p>
+                                            </el-col>
+                                        </el-row>
+                                        
+                                        <!-- 投资方的其他投资 -->
+                                        <div v-if="selectedInvestor.investees && selectedInvestor.investees.length > 0">
+                                            <h4>该投资方的其他投资 ({{ selectedInvestor.investees.length }})</h4>
+                                            <el-table :data="selectedInvestor.investees" size="mini">
+                                                <el-table-column prop="name" label="被投资企业"></el-table-column>
+                                                <el-table-column prop="percent" label="持股比例" width="100"></el-table-column>
+                                                <el-table-column label="操作" width="80">
+                                                    <template slot-scope="scope">
+                                                        <el-button @click="selectCompanyById(scope.row.id)" type="text" size="small">查看</el-button>
+                                                    </template>
+                                                </el-table-column>
+                                            </el-table>
+                                        </div>
+                                    </div>
+                                </el-card>
+                            </el-tab-pane>
+                            
+                            <!-- 股权穿透分析 -->
+                            <el-tab-pane label="股权穿透分析" name="equity_analysis" v-if="currentCompany">
+                                <el-card>
+                                    <div slot="header">
+                                        <h3>{{ currentCompany.name }} 的股权穿透分析</h3>
+                                    </div>
+                                    <div>
+                                        <el-row :gutter="20">
+                                            <el-col :span="24">
+                                                <el-alert
+                                                  title="股权穿透分析可以帮助您了解企业的实际控制人和复杂的投资关系网络。"
+                                                  type="info"
+                                                  :closable="false"
+                                                  show-icon>
+                                                </el-alert>
+                                                
+                                                <div style="margin-top: 20px;">
+                                                    <el-button 
+                                                        type="primary" 
+                                                        @click="generateEquityAnalysis" 
+                                                        :loading="generatingAnalysis">
+                                                        生成股权分析报告
+                                                    </el-button>
+                                                </div>
+                                                
+                                                <!-- 三层股权穿透结构 -->
+                                                <div class="equity-structure-container" v-if="equityAnalysisResult.upstream || equityAnalysisResult.downstream">
+                                                    <!-- 上游股权层 -->
+                                                    <div class="equity-layer upstream-layer">
+                                                        <div class="layer-title">
+                                                            <h4>上游股权 (投资方)</h4>
+                                                        </div>
+                                                        <div class="layer-content" v-if="equityAnalysisResult.upstream">
+                                                            <el-collapse accordion>
+                                                                <el-collapse-item v-for="(investor, index) in flattenUpstreamInvestors" :key="'up-'+index">
+                                                                    <template slot="title">
+                                                                        <div class="equity-node-title">
+                                                                            <span>{{ investor.name }}</span>
+                                                                            <span v-if="investor.percent" class="equity-percent"> ({{ investor.percent }})</span>
+                                                                            <el-tag size="mini" :type="investor.type === 'P' ? 'info' : investor.type === 'E' ? 'success' : 'warning'" style="margin-left: 8px;">
+                                                                                {{ investor.type === 'P' ? '个人' : investor.type === 'E' ? '企业' : investor.type }}
+                                                                            </el-tag>
+                                                                        </div>
+                                                                    </template>
+                                                                    
+                                                                    <div class="node-details">
+                                                                        <p><strong>持股比例:</strong> {{ investor.percent || '未知' }}</p>
+                                                                        <p v-if="investor.pagerank"><strong>PageRank值:</strong> {{ investor.pagerank.toFixed(8) }}</p>
+                                                                        <el-button 
+                                                                            type="primary" 
+                                                                            size="mini" 
+                                                                            v-if="investor.id && investor.type !== 'P'"
+                                                                            @click="viewAsCenter(investor.id)">
+                                                                            设为中心企业
+                                                                        </el-button>
+                                                                    </div>
+                                                                </el-collapse-item>
+                                                            </el-collapse>
+                                                        </div>
+                                                        <div class="layer-empty" v-else>
+                                                            <el-empty description="暂无上游股权信息" :image-size="60"></el-empty>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- 中游股权层 (当前公司) -->
+                                                    <div class="equity-layer midstream-layer">
+                                                        <div class="layer-title">
+                                                            <h4>中游企业 (当前分析主体)</h4>
+                                                        </div>
+                                                        <div class="layer-content">
+                                                            <div class="current-company-node">
+                                                                <div class="current-company-title">
+                                                                    <span class="company-name">{{ currentCompany.name }}</span>
+                                                                    <el-tag size="mini" :type="currentCompany.type === 'P' ? 'info' : currentCompany.type === 'E' ? 'success' : 'warning'" style="margin-left: 8px;">
+                                                                        {{ currentCompany.type === 'P' ? '个人' : currentCompany.type === 'E' ? '企业' : currentCompany.type === 'UE' ? '境外企业' : currentCompany.type || '未知' }}
+                                                                    </el-tag>
+                                                                </div>
+                                                                <div class="current-company-details">
+                                                                    <p><strong>级别:</strong> {{ currentCompany.level || '未知' }}</p>
+                                                                    <p v-if="currentCompany.metrics && currentCompany.metrics.pagerank">
+                                                                        <strong>PageRank值:</strong> {{ currentCompany.metrics.pagerank.toFixed(8) }}
+                                                                    </p>
+                                                                    <p v-if="currentCompany.investors"><strong>投资方数量:</strong> {{ currentCompany.investors.length }}</p>
+                                                                    <p v-if="currentCompany.investees"><strong>被投资企业数量:</strong> {{ currentCompany.investees.length }}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- 下游股权层 -->
+                                                    <div class="equity-layer downstream-layer">
+                                                        <div class="layer-title">
+                                                            <h4>下游股权 (被投资企业)</h4>
+                                                        </div>
+                                                        <div class="layer-content" v-if="equityAnalysisResult.downstream">
+                                                            <el-collapse accordion>
+                                                                <el-collapse-item v-for="(investee, index) in flattenDownstreamInvestees" :key="'down-'+index">
+                                                                    <template slot="title">
+                                                                        <div class="equity-node-title">
+                                                                            <span>{{ investee.name }}</span>
+                                                                            <span v-if="investee.percent" class="equity-percent"> ({{ investee.percent }})</span>
+                                                                            <el-tag size="mini" :type="investee.type === 'P' ? 'info' : investee.type === 'E' ? 'success' : 'warning'" style="margin-left: 8px;">
+                                                                                {{ investee.type === 'P' ? '个人' : investee.type === 'E' ? '企业' : investee.type }}
+                                                                            </el-tag>
+                                                                        </div>
+                                                                    </template>
+                                                                    
+                                                                    <div class="node-details">
+                                                                        <p><strong>持股比例:</strong> {{ investee.percent || '未知' }}</p>
+                                                                        <p v-if="investee.pagerank"><strong>PageRank值:</strong> {{ investee.pagerank.toFixed(8) }}</p>
+                                                                        <el-button 
+                                                                            type="primary" 
+                                                                            size="mini" 
+                                                                            v-if="investee.id && investee.type !== 'P'"
+                                                                            @click="viewAsCenter(investee.id)">
+                                                                            设为中心企业
+                                                                        </el-button>
+                                                                    </div>
+                                                                </el-collapse-item>
+                                                            </el-collapse>
+                                                        </div>
+                                                        <div class="layer-empty" v-else>
+                                                            <el-empty description="暂无下游股权信息" :image-size="60"></el-empty>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </el-col>
+                                        </el-row>
+                                    </div>
+                                </el-card>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </el-main>
+                </el-container>
+            </el-container>
+            
+            <el-footer height="30px">
+                <p>© 2023 股权关系分析系统</p>
+            </el-footer>
+        </el-container>
+    </div>
+
+    <!-- 引入Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- 引入Element UI -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!-- 引入Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- 自定义JS -->
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
+ 

@@ -1,181 +1,173 @@
-# 三层股权穿透网络分析与查询
+# 股权关系分析系统
 
-本项目使用 Python 和 NetworkX 等库，对符合特定格式的股权穿透数据CSV文件进行网络建模、高级分析、可视化以及节点邻域查询。
+这是一个基于网络图分析的股权关系可视化和分析系统，可以展示企业间的投资关系，进行中心性分析，检测循环持股关系等。
 
-## 项目特色
+## 功能特点
 
-- **股权网络构建**: 从CSV数据准确构建有向图，正确处理`parent_id`和嵌套的`children`字段确定的股权关系 (遵循 Child -> Parent 规则)。
-    - **`percent`属性规范化**: `graph_builder.py` 现在会自动将股权比例（`percent`）规范化为0.0到1.0之间的小数，便于后续计算。
-- **多样化分析**: 
-    - `graph_model.py`: 提供基础的图统计数据和整体股权网络图的可视化。
-    - `advanced_analysis.py`: 执行深入分析，包括：
-        - 1. 中心性分析（度、接近、中介、特征向量、PageRank）
-        - 2. 社区检测（Louvain算法）
-        - 3. 循环持股识别
-        - 4. 关键控制者识别
-        - 5. 最终控制人分析
-        - 6. **股权穿透分析**（已移除出主报告，建议在需要时单独查询）
-        - 7. 链路合理性检查 (自循环、父节点信息、持股比例有效性)
-        - 生成详细的文本报告和可视化图表。
-    - `query_node_neighborhood.py`: 允许用户通过节点名称查询其指定度数（默认为2度）的邻域网络，输出详细的节点/边信息到文本文件，并生成邻域可视化图。
-    - `投资方查询.py`: 输入公司名称，查询其所有直接投资方（上游）、被投资企业（下游），并对每个投资方输出画像（PageRank、度、出度、入度等）。
-- **模块化设计**: 
-    - `graph_builder.py`: 封装了核心的图构建逻辑。
-    - `graph_persistence.py`: 用于保存和加载图模型（使用GraphML格式），方便后续增量修改和分析。
-    - `font_config.py`: 统一管理中文字体配置，确保图表中文显示正常。
-- **可配置输出**: 生成多种图片（.png）和文本报告（.txt），统一保存到 `outputs/` 文件夹中。
+1. **图模型基本信息展示**
+   - 节点和边的总数统计
+   - 被投资最多的实体排名
+   - 投资最多的实体排名
+   - PageRank中心性排名（精确到小数点后8位）
+   - 度中心性排名
+   - 循环持股关系检测
 
-## 项目结构
+2. **投资关系详情分析**
+   - 支持公司名称搜索
+   - 展示公司的投资方详细信息(包括PageRank值、投资数、被投资数等)
+   - 展示公司被投资企业的详情
+   - 支持在当前页面内查看投资方详情，无需跳转
+   - 精确显示持股比例和投资关系
+   - 投资方数据表格支持高亮选中行
 
-```
-graph-main/
-├── graph_model.py               # 基础网络建模与可视化
-├── advanced_analysis.py         # 高级网络分析与报告生成
-├── query_node_neighborhood.py   # 节点邻域查询与可视化
-├── 投资方查询.py               # 投资方查询脚本
-├── graph_builder.py             # 核心图构建模块
-├── graph_persistence.py         # 图模型持久化（保存/加载）模块
-├── font_config.py               # 中文字体配置模块
-├── visualize_graph_construction.py # 图构建过程可视化
-├── 三层股权穿透输出数据.csv       # 【示例】输入的股权数据CSV文件
-├── requirements.txt             # Python依赖包列表
-├── README.md                    # 本文件
-├── outputs/                     # 输出文件夹
-│   ├── reports/                 # 文本报告保存目录
-│   │   ├── advanced_analysis_report.txt  # 高级分析报告
-│   │   ├── query_result_*.txt           # 节点查询结果报告
-│   │   └── graph_construction_stats.txt # 图构建统计报告
-│   ├── images/                  # 可视化图像保存目录
-│   │   ├── graph_model_visualization.png # 整体网络可视化图
-│   │   ├── 股权关系社区结构.png           # 社区检测结果图
-│   │   ├── 最终控制人网络图.png           # (旧版，可按需保留或由新分析替代)
-│   │   ├── query_result_*.png           # 节点邻域查询图
-│   │   └── graph_construction_final.png # 图构建最终状态图
-│   ├── graph_model.graphml      # （如果使用 graph_persistence.py 保存）保存的图模型文件
-│   └── temp/                    # 临时文件目录
-└── [旧版输出文件]               # 项目根目录下可能存在的旧版输出文件
+3. **股权穿透分析**
+   - 三层股权结构清晰展示：上游(投资方)、中游(当前公司)和下游(被投资企业)
+   - 每层拥有专门的样式区分，增强可读性
+   - 支持将任何公司设置为中心分析对象，实现灵活的股权链分析
+   - 显示各层次的持股比例及PageRank值等重要指标
+   - 支持折叠/展开各层次的详细信息
+
+## 安装与运行
+
+### 前提条件
+
+- Python 3.7+
+- pip包管理器
+
+### 安装依赖
+
+```bash
+pip install -r requirements.txt
 ```
 
-## 安装依赖
+### 运行系统
 
-1.  确保您已安装 Python 3.8 或更高版本。
-2.  建议使用虚拟环境以避免包冲突：
-    ```bash
-    python -m venv .venv
-    source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
-    ```
-3.  安装所需的依赖包：
-    ```bash
-    pip install -r requirements.txt
-    ```
+```bash
+python app.py
+```
 
-## 数据格式说明
-
-输入的CSV文件（例如 `三层股权穿透输出数据.csv`）应包含但不限于以下关键字段，用于构建股权关系网络：
-
-- `eid`: 实体唯一ID (推荐，如果名称可能重复)。如果缺失，将使用`name`作为ID。
-- `name`: 实体名称（公司或个人）。
-- `type`: 实体类型 (例如: 'E'代表企业, 'P'代表个人)。用于可视化时的节点区分。
-- `level`: 实体在股权结构中的层级。用于可视化标签。
-- `parent_id`: 该实体直接父节点的ID。关系为：当前实体 -> `parent_id`实体。
-- `children`: 一个JSON字符串，描述直接持有当前实体股份的股东信息。每个股东对象可包含`name`, `eid`, `type`, `level`, `percent`等。关系为：`children`中的股东 -> 当前实体。
-- `percent`: 持股比例。在 `graph_builder.py` 中会被规范化为 0.0 到 1.0 之间的小数（`None` 表示未知）。原始数据可以是 '10.5%' 或 10.5 或 '0.105' 等形式。
-- `amount`: 投资金额。
-- `sh_type`: 股东类型/持股类型。
-
-**重要**: `graph_builder.py` 会尝试使用多种中文编码（gbk, gb18030, gb2312, utf-8, big5）读取CSV文件。
+启动后，在浏览器中访问 http://localhost:8888 即可使用系统。
 
 ## 使用方法
 
-确保您的CSV数据文件与脚本在同一目录，或在脚本中指定正确的文件路径。
+1. 首页加载后，默认显示"分析概览"标签页，展示图模型的基本统计信息。
 
-1.  **基础网络建模与整体可视化 (`graph_model.py`)**
-    ```bash
-    python graph_model.py
-    ```
-    - 输出: 
-        - 控制台打印图的基本统计信息。
-        - 生成 `outputs/images/graph_model_visualization.png` 图片。
+2. 在左侧边栏的搜索框中输入公司名称，按下Enter键或点击搜索按钮进行搜索。
 
-2.  **高级网络分析与报告生成 (`advanced_analysis.py`)**
-    ```bash
-    python advanced_analysis.py
-    ```
-    - 输出:
-        - 控制台打印分析过程和总结。
-        - 生成 `outputs/reports/advanced_analysis_report.txt` 包含详细分析结果（包括新的股权穿透分析）和逻辑说明的文本报告。
-        - 生成 `outputs/images/股权关系社区结构.png` 等可视化图片。
+3. 从搜索结果中选择一个公司，系统会自动切换到"投资关系详情"标签页，并显示该公司的投资方信息。
 
-3.  **节点邻域查询 (`query_node_neighborhood.py`)**
-    
-    查询特定节点的N度邻域信息 (默认为2度)。
-    ```bash
-    python query_node_neighborhood.py "节点的确切名称"
-    ```
-    例如:
-    ```bash
-    python query_node_neighborhood.py "阿里巴巴（中国）网络技术有限公司"
-    ```
-    查询指定度数的邻域 (例如1度):
-    ```bash
-    python query_node_neighborhood.py "节点名称" --radius 1
-    ```
-    - 输出:
-        - 控制台打印查询过程和总结。
-        - 生成 `outputs/reports/query_result_节点名称.txt` 包含该节点及其N度邻域内其他节点和关系的详细信息。
-        - 生成 `outputs/images/query_result_节点名称.png` 可视化该邻域网络。
+4. 在"投资关系详情"标签页中，您可以：
+   - 查看所有投资方的详细信息，包括持股比例、PageRank值等
+   - 查看公司的被投资企业列表
+   - 点击"查看详情"可以在当前页面查看某个投资方的详细信息，包括其他投资关系
+   - 点击被投资企业列表中的"查看详情"按钮可以将该企业设为中心查看点
 
-4.  **图构建过程可视化 (`visualize_graph_construction.py`)**
-    ```bash
-    python visualize_graph_construction.py
-    ```
-    - 输出:
-        - 控制台打印图构建过程信息。
-        - 生成 `outputs/images/graph_construction_final.png` 图构建最终状态图。
-        - 生成 `outputs/reports/graph_construction_stats.txt` 图构建统计报告。
+5. 在"股权穿透分析"标签页中，您可以：
+   - 点击"生成股权分析报告"按钮获取实时的股权穿透分析
+   - 查看上游股权结构（投资方层），了解公司的投资方及相关指标
+   - 查看中游企业（当前分析主体），包括基本信息和关键指标
+   - 查看下游股权结构（被投资企业层），了解公司投资的企业
+   - 点击"设为中心企业"按钮可以将任何相关公司设为新的分析中心
+   - 折叠/展开各层的详细信息，灵活查看关心的数据
 
-5.  **图模型持久化 (`graph_persistence.py`)**
-    ```bash
-    python graph_persistence.py
-    ```
-    - 功能: 构建图 -> 保存到 `outputs/graph_model.graphml` -> 从文件加载图。
-    - 你可以修改此脚本以加载已保存的图并进行进一步操作（例如添加边、执行分析等）。
+## 数据结构
 
-6.  **投资方查询 (`投资方查询.py`)**
-    ```bash
-    python 投资方查询.py "公司名称"
-    ```
-    - 输出该公司所有直接投资方（上游）、被投资企业（下游），并对每个投资方输出画像。
-    
-    或者：
-    ```bash
-    python 投资方查询.py --global
-    ```
-    - 输出全局共同投资方分析（哪些公司有多个股东共同投资，并给出投资方画像）。
+系统基于CSV文件构建图模型，CSV应包含以下字段：
+- name: 实体名称
+- eid: 实体ID（可选）
+- type: 实体类型（'P'表示个人，'E'表示企业，'UE'表示境外企业）
+- level: 实体层级
+- parent_id: 父节点ID
+- children: 子节点JSON数据
+- percent: 持股比例
 
-## 输出文件夹结构
+## 文件说明
 
-项目现在使用结构化的输出文件夹组织，文件分类如下：
+- app.py: Flask应用入口文件
+- graph_builder.py: 图模型构建模块
+- graph_model.py: 图模型基础分析
+- advanced_analysis.py: 高级网络分析
+- query_node_neighborhood.py: 节点邻域查询
+- templates/: HTML模板目录
+- static/: 静态资源目录（CSS、JS等）
 
-- **outputs/reports/** - 存放所有文本报告和分析结果
-- **outputs/images/** - 存放所有可视化图像
-- **outputs/graph_model.graphml** - （如果使用 `graph_persistence.py`）保存的图模型文件。
-- **outputs/temp/** - 存放临时文件和中间处理结果
+## 报告生成脚本
 
-当运行各个脚本时，所有输出文件将自动保存到相应的文件夹中。如果文件夹不存在，将自动创建。
+系统提供了多个独立脚本，可直接生成分析报告和可视化输出，无需启动Web界面。这些脚本可以批量处理数据，生成静态报告，适用于定期分析或大规模数据处理场景。
 
-## 注意事项
+### advanced_analysis.py - 高级网络分析报告
 
-- **中文字体**: 项目包含 `font_config.py` 以尝试自动配置中文字体。如果图表中的中文显示为方框，请确保您的系统中安装了常见的中文字体 (如SimHei, Microsoft YaHei等)，或者根据需要修改 `font_config.py` 中的字体列表。
-- **性能**: 对于非常大的CSV文件和复杂的网络，图的生成、布局计算和分析可能需要较长时间和较多内存。股权穿透分析的深度（`max_depth`）也会影响性能。
-- **CSV编码**: 脚本会尝试多种常见中文编码。如果您的CSV文件使用非常特殊的编码，可能需要手动在 `graph_builder.py` 的 `pd.read_csv()` 部分指定。
-- **累积持股比例**: `advanced_analysis.py` 中的股权穿透分析计算的是沿单一路径的累积持股比例。对于一个实体通过多条路径被间接持股/控制的复杂情况，总有效持股比例的计算可能需要更复杂的算法，当前版本为分别列出各路径。
-- **关联方分析**: 当前为初步共同投资分析，更复杂的关联关系（如一致行动人、共同高管等）识别需要更多数据和算法。
+该脚本执行深度网络分析并生成综合报告：
 
-## 未来可能的改进
+```bash
+python advanced_analysis.py
+```
 
-- 增加更复杂的权重计算和边属性利用（例如 `amount`）。
-- 实现更精确的总有效持股比例合并算法。
-- 提供交互式可视化选项 (例如使用 Pyvis 或 Dash/Streamlit)。
-- 优化超大图的处理性能。
-- 增加更多针对性的风控分析模块和模式识别。 
+**主要功能：**
+- 中心性分析：计算并输出度中心性、PageRank中心性、接近中心性、中介中心性和特征向量中心性
+- 社区检测：识别并可视化网络中的社区结构
+- 循环持股分析：检测股权关系中的循环结构，计算循环控制比例
+- 关键控制者分析：识别网络中控制多个实体的关键股东
+
+**输出文件：**
+- `outputs/reports/advanced_analysis_report.txt`: 包含详细分析结果的文本报告
+- `outputs/images/股权关系社区结构.png`: 社区结构可视化图
+
+### visualize_graph_construction.py - 图构建可视化
+
+该脚本逐步可视化图的构建过程，帮助理解数据如何形成网络：
+
+```bash
+python visualize_graph_construction.py
+```
+
+**主要功能：**
+- 逐行读取CSV数据并动态可视化NetworkX图的构建过程
+- 展示节点和边的添加过程，直观展示网络的形成
+- 生成图构建统计信息
+
+**参数定制：**
+- rows_to_visualize: 限制处理的行数（默认100行）
+- pause_duration: 每步可视化的暂停时间（默认0.7秒）
+- save_final: 是否保存最终图状态（默认是）
+
+**输出文件：**
+- `outputs/images/graph_construction_final.png`: 最终图状态的可视化
+- `outputs/reports/graph_construction_stats.txt`: 图构建过程的统计信息
+
+### 投资方查询.py - 特定公司投资关系分析
+
+该脚本可快速查询特定公司的投资关系并生成详细报告：
+
+```bash
+# 查询特定公司的投资关系
+python 投资方查询.py "公司名称"
+
+# 进行全局共同投资方分析
+python 投资方查询.py --global
+```
+
+**主要功能：**
+- 查询指定公司的上游投资方和下游被投资企业
+- 显示投资方的详细画像（类型、PageRank值、度中心性、投资数、被投资数等）
+- 展示持股比例信息
+- 全局分析模式下，识别存在多个股东共同投资的公司
+
+**适用场景：**
+- 快速获取特定公司的投资关系
+- 发现复杂投资结构中的共同投资行为
+- 从命令行直接生成简洁的投资关系报告
+
+## 技术栈
+
+- 后端: Python, Flask, NetworkX
+- 前端: Vue.js, Element UI, Axios
+- 数据可视化: Element UI组件 
+
+## 最新优化
+
+- PageRank值显示优化：所有PageRank值统一精确到小数点后8位，确保数值准确可比
+- 投资方详情展示优化：在当前页面直接显示投资方详情，避免频繁页面跳转
+- 被投资企业功能增强：添加更完整的被投资企业查看功能
+- 三层股权穿透设计：全新设计的三层结构，更清晰展示股权关系链
+- 交互功能优化：添加"设为中心企业"功能，支持沿着股权链灵活分析 

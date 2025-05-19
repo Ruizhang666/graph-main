@@ -1,0 +1,296 @@
+/* 全局样式 */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    background-color: #f5f7fa;
+}
+
+/* 头部样式 */
+.el-header {
+    background-color: #409EFF;
+    color: white;
+    line-height: 60px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+    position: relative;
+    z-index: 10;
+}
+
+/* 侧边栏样式 */
+.el-aside {
+    background-color: white;
+    color: #333;
+    border-right: 1px solid #e6e6e6;
+    padding: 20px 15px;
+    height: calc(100vh - 90px);
+    overflow-y: auto;
+}
+
+/* 主区域样式 */
+.el-main {
+    padding: 20px;
+    height: calc(100vh - 90px);
+    overflow-y: auto;
+}
+
+/* 底部样式 */
+.el-footer {
+    background-color: #f5f7fa;
+    color: #909399;
+    text-align: center;
+    line-height: 30px;
+    border-top: 1px solid #e6e6e6;
+}
+
+/* 搜索框样式 */
+.search-box {
+    margin-bottom: 20px;
+}
+
+.search-results {
+    margin-top: 15px;
+}
+
+.search-error {
+    margin-top: 15px;
+}
+
+/* 公司信息样式 */
+.company-info {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e6e6e6;
+}
+
+.company-info h3 {
+    margin-top: 0;
+    color: #409EFF;
+}
+
+.company-info h4 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #606266;
+}
+
+/* 邻域设置样式 */
+.network-settings {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #e6e6e6;
+}
+
+.slider-container {
+    margin-top: 10px;
+}
+
+/* 可视化容器样式 */
+.visualization-container {
+    height: calc(100vh - 180px);
+    min-height: 500px;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+#network-container {
+    width: 100%;
+    height: 100%;
+    background-color: #fcfcfc;
+}
+
+/* 未选择公司时的提示样式 */
+.no-company-selected {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 180px);
+    min-height: 500px;
+    background-color: #fcfcfc;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+}
+
+/* 概览卡片样式 */
+.overview-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.overview-card {
+    margin-bottom: 0;
+}
+
+.overview-card .el-card__header {
+    padding: 10px 15px;
+}
+
+.overview-card .el-card__header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #303133;
+}
+
+.overview-card .el-card__body {
+    padding: 15px;
+}
+
+/* 循环持股样式 */
+.cycle-item {
+    margin-bottom: 15px;
+}
+
+.cycle-node-tag {
+    margin: 3px;
+}
+
+/* 表格样式优化 */
+.el-table {
+    margin-top: 5px;
+}
+
+.el-table--mini td {
+    padding: 5px 0;
+}
+
+/* 卡片内表格样式 */
+.overview-card .el-table--mini td,
+.overview-card .el-table--mini th {
+    padding: 5px;
+}
+
+/* 选中的投资方高亮样式 */
+.investor-selected {
+    background-color: #f0f9ff !important;
+}
+
+/* 详情卡片过渡动画 */
+#investor-details-card {
+    transition: all 0.3s ease;
+}
+
+/* 股权树样式 */
+.equity-tree-node {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.equity-percent {
+    color: #409EFF;
+    margin-left: 6px;
+}
+
+.equity-type {
+    margin-left: 8px;
+}
+
+/* 三层股权穿透结构样式 */
+.equity-structure-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    gap: 30px;
+}
+
+.equity-layer {
+    border: 1px solid #EBEEF5;
+    border-radius: 4px;
+    background-color: #FAFAFA;
+    padding: 15px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+}
+
+.layer-title {
+    border-bottom: 1px solid #EBEEF5;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.layer-title h4 {
+    margin: 0;
+    color: #303133;
+    font-size: 16px;
+}
+
+.layer-content {
+    padding: 10px 0;
+}
+
+.layer-empty {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 中游企业 (当前分析主体) 样式 */
+.midstream-layer {
+    background-color: #f0f9ff;
+    border-color: #409EFF;
+}
+
+.midstream-layer .layer-title {
+    border-bottom-color: #d9ecff;
+}
+
+.current-company-node {
+    padding: 15px;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+}
+
+.current-company-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #409EFF;
+}
+
+.current-company-details {
+    color: #606266;
+    line-height: 1.8;
+}
+
+/* 上游和下游层样式 */
+.upstream-layer {
+    background-color: #f7f7f9;
+}
+
+.downstream-layer {
+    background-color: #f8f8f8;
+}
+
+/* 股权节点样式 */
+.equity-node-title {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.node-details {
+    padding: 10px;
+    color: #606266;
+    line-height: 1.7;
+    background-color: #FCFCFC;
+    border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+    .overview-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .el-aside {
+        width: 100% !important;
+        height: auto;
+    }
+    
+    .visualization-container,
+    .no-company-selected {
+        height: 400px;
+    }
+}

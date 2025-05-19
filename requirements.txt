@@ -4,4 +4,5 @@ matplotlib>=3.0.0
 numpy>=1.18.0
 seaborn>=0.11.0
 python-louvain>=0.15
-pyvis>=0.3.2 
+pyvis>=0.3.2
+flask>=2.0.0 
