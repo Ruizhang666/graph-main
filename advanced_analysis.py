@@ -61,6 +61,16 @@ else:
     for node, centrality in top_degree:
         write_and_print(report_file, f"{G.nodes[node]['name']}: {centrality:.4f}")
 
+    # PageRank中心性
+    try:
+        pagerank_centrality = nx.pagerank(G, alpha=0.85)
+        top_pagerank = sorted(pagerank_centrality.items(), key=lambda x: x[1], reverse=True)[:5]
+        write_and_print(report_file, "\nPageRank前5名（网络影响力最大）:")
+        for node, pr in top_pagerank:
+            write_and_print(report_file, f"{G.nodes[node]['name']}: {pr:.4f}")
+    except Exception as e:
+        write_and_print(report_file, f"\nPageRank计算出错: {e}")
+
     # 接近中心性：到其他所有节点距离最短的实体
     try:
         closeness_centrality = nx.closeness_centrality(G)
@@ -204,15 +214,39 @@ else:
     # 4. 集中控制分析 - 找出控制多个实体的关键股东及其控制的企业网络
     write_and_print(report_file, "\n\n关键控制者分析:")
     write_and_print(report_file, "="*50)
+    
+    write_and_print(report_file, "关键控制者分析基于以下逻辑：")
+    write_and_print(report_file, "1. 出度高的节点代表控制/投资多个实体的股东")
+    write_and_print(report_file, "2. 持股比例反映控制力的强度")
+    write_and_print(report_file, "3. 与中心性指标结合，可判断节点在网络中的影响力")
+    write_and_print(report_file, "4. 关键控制者的判定综合考虑：控制企业数量、持股比例、PageRank等指标\n")
 
     # 按出度（控制的企业数量）排序
     out_degrees = dict(G.out_degree())
     top_controllers = sorted(out_degrees.items(), key=lambda x: x[1], reverse=True)
 
+    # 预先计算指标供使用
+    pr_centrality = nx.pagerank(G, alpha=0.85)
+    try:
+        betweenness = nx.betweenness_centrality(G)
+    except:
+        betweenness = {}  # 如果计算失败则使用空字典
+
     # 分析前3名控制者
     for i, (node, degree) in enumerate(top_controllers[:3]):
         if degree > 0:  # 确保有出边
-            write_and_print(report_file, f"\n关键控制者 {i+1}: {G.nodes[node]['name']} (控制 {degree} 个实体)")
+            # 获取节点指标
+            pr_score = pr_centrality.get(node, 0.0)
+            btw_score = betweenness.get(node, 0.0)
+            node_type = G.nodes[node].get('type', '未知')
+            in_degree = G.in_degree(node)
+            
+            write_and_print(report_file, f"\n关键控制者 {i+1}: {G.nodes[node]['name']}")
+            write_and_print(report_file, f"  • 控制实体数: {degree}")
+            write_and_print(report_file, f"  • 节点类型: {node_type}")
+            write_and_print(report_file, f"  • PageRank: {pr_score:.4f}")
+            write_and_print(report_file, f"  • 中介中心性: {btw_score:.4f}")
+            write_and_print(report_file, f"  • 入度(被投资数): {in_degree}")
             
             # 获取控制的所有实体
             controlled_entities = []
@@ -227,15 +261,23 @@ else:
                 pass  # 排序失败就使用原顺序
             
             # 打印前5个控制的实体
+            write_and_print(report_file, f"  控制的实体（按持股比例排序，显示前5个）:")
             for j, (entity_id, entity_name, percent) in enumerate(controlled_entities[:5]):
-                write_and_print(report_file, f"  - {entity_name}: {percent}")
+                target_type = G.nodes[entity_id].get('type', '未知')
+                write_and_print(report_file, f"    - {entity_name} (类型: {target_type}, 持股: {percent})")
             
             if len(controlled_entities) > 5:
-                write_and_print(report_file, f"  - ... 以及其他 {len(controlled_entities) - 5} 个实体")
+                write_and_print(report_file, f"    - ... 以及其他 {len(controlled_entities) - 5} 个实体")
 
     # 5. 最终控制人分析
     write_and_print(report_file, "\n\n5. 最终控制人分析:")
     write_and_print(report_file, "="*50)
+    
+    write_and_print(report_file, "最终控制人分析基于以下逻辑：")
+    write_and_print(report_file, "1. 无入边节点（无人投资/控制的实体）被视为潜在的最终控制人")
+    write_and_print(report_file, "2. 从该节点可到达的所有节点构成其'影响范围'")
+    write_and_print(report_file, "3. 影响力大小取决于可到达节点数量及路径上的持股比例")
+    write_and_print(report_file, "4. 在复杂网络中，最终控制人可能通过多条路径间接控制同一实体\n")
 
     # 寻找没有入边的节点（树的根，最终控制人）
     ultimate_controllers = [node for node, in_degree in G.in_degree() if in_degree == 0]
@@ -244,252 +286,49 @@ else:
 
     # 分析每个最终控制人控制的实体
     for i, controller in enumerate(ultimate_controllers[:5]):  # 只显示前5个
+        # 获取节点指标
+        pr_score = pr_centrality.get(controller, 0.0)
+        btw_score = betweenness.get(controller, 0.0)
+        node_type = G.nodes[controller].get('type', '未知')
+        out_degree = G.out_degree(controller)
+        
         write_and_print(report_file, f"\n最终控制人 {i+1}: {G.nodes[controller]['name']}")
+        write_and_print(report_file, f"  • 节点类型: {node_type}")
+        write_and_print(report_file, f"  • PageRank: {pr_score:.4f}")
+        write_and_print(report_file, f"  • 中介中心性: {btw_score:.4f}")
+        write_and_print(report_file, f"  • 出度(直接投资数): {out_degree}")
         
         # 计算这个控制人的影响力 - 从这个节点可到达的所有节点
         reachable = nx.descendants(G, controller)
-        write_and_print(report_file, f"  可直接或间接影响 {len(reachable)} 个实体")
-        # 可以进一步分析这些实体，例如按类型统计等
-
-    # 6. 股权穿透分析
-    write_and_print(report_file, "\n\n6. 股权穿透分析:")
-    write_and_print(report_file, "="*50)
-
-    def get_shareholding_paths(graph, target_node_id, current_path=None, visited_in_path=None, all_paths=None, max_depth=10, current_depth=0, accumulated_percent=1.0):
-        """
-        递归向上查找指定目标节点的所有最终股东路径及其累积持股比例。
-        target_node_id: 目标公司的ID。
-        current_path: 当前正在构建的路径 [ (node, percent_from_previous_in_path), ... ]。
-                     对于路径的第一个节点(即target_node_id)，percent_from_previous_in_path 为 1.0。
-        visited_in_path: 当前路径中已访问的节点，用于防环。
-        all_paths: 收集所有找到的完整路径。
-        max_depth: 最大穿透层数。
-        current_depth: 当前递归深度。
-        accumulated_percent: 从路径起始点到当前节点上一节点的累积百分比。
-        返回: 路径列表，每条路径是 [(node_name, percent_on_edge_to_next, cumulative_percent_to_node), ...]
-        """
-        if current_path is None:
-            current_path = []
-        if visited_in_path is None:
-            visited_in_path = set()
-        if all_paths is None:
-            all_paths = []
-
-        current_path.append({
-            'id': target_node_id, 
-            'name': graph.nodes[target_node_id].get('name', target_node_id),
-            'cumulative_percent': accumulated_percent 
-        })
-        visited_in_path.add(target_node_id)
-
-        predecessors = list(graph.predecessors(target_node_id))
-
-        if not predecessors or current_depth >= max_depth:
-            formatted_path = []
-            for i in range(len(current_path)):
-                node_info = current_path[i]
-                formatted_path.append({
-                    'id': node_info['id'],
-                    'name': node_info['name'],
-                    'cumulative_percent_at_node': node_info['cumulative_percent']
-                })
-            all_paths.append(list(reversed(formatted_path))) 
-        else:
-            for shareholder_node_id in predecessors:
-                if shareholder_node_id not in visited_in_path:
-                    edge_data = graph.get_edge_data(shareholder_node_id, target_node_id)
-                    percent_on_edge = edge_data.get('percent', 0.0) if edge_data else 0.0
-                    if percent_on_edge is None: percent_on_edge = 0.0 
-                    
-                    new_accumulated_percent = accumulated_percent * percent_on_edge
-                    
-                    get_shareholding_paths(graph, shareholder_node_id, 
-                                             current_path, visited_in_path, 
-                                             all_paths, max_depth, current_depth + 1, 
-                                             new_accumulated_percent)
+        write_and_print(report_file, f"  • 可直接或间接影响: {len(reachable)} 个实体")
         
-        visited_in_path.remove(target_node_id)
-        current_path.pop()
-        return all_paths
-
-    def get_investment_paths(graph, source_node_id, current_path=None, visited_in_path=None, all_paths=None, max_depth=10, current_depth=0, accumulated_percent=1.0):
-        """
-        递归向下查找指定源节点的所有投资路径及其累积控制比例。
-        source_node_id: 源公司/个人的ID。
-        返回: 路径列表，格式类似 get_shareholding_paths
-        """
-        if current_path is None:
-            current_path = []
-        if visited_in_path is None:
-            visited_in_path = set()
-        if all_paths is None:
-            all_paths = []
-
-        current_path.append({
-            'id': source_node_id,
-            'name': graph.nodes[source_node_id].get('name', source_node_id),
-            'cumulative_percent': accumulated_percent
-        })
-        visited_in_path.add(source_node_id)
-
-        successors = list(graph.successors(source_node_id))
-
-        if not successors or current_depth >= max_depth:
-            formatted_path = []
-            for node_info in current_path:
-                formatted_path.append({
-                    'id': node_info['id'],
-                    'name': node_info['name'],
-                    'cumulative_percent_at_node': node_info['cumulative_percent'] 
-                })
-            all_paths.append(formatted_path) 
-        else:
-            for invested_node_id in successors:
-                if invested_node_id not in visited_in_path:
-                    edge_data = graph.get_edge_data(source_node_id, invested_node_id)
-                    percent_on_edge = edge_data.get('percent', 0.0) if edge_data else 0.0
-                    if percent_on_edge is None: percent_on_edge = 0.0
-                    
-                    new_accumulated_percent = accumulated_percent * percent_on_edge
-                    
-                    get_investment_paths(graph, invested_node_id, 
-                                         current_path, visited_in_path, 
-                                         all_paths, max_depth, current_depth + 1, 
-                                         new_accumulated_percent)
-        
-        visited_in_path.remove(source_node_id)
-        current_path.pop()
-        return all_paths
-
-    example_target_node_for_upward = None 
-    example_source_node_for_downward = None
-
-    if G.number_of_nodes() > 0:
-        for node_id in G.nodes():
-            if G.out_degree(node_id) > 0:
-                example_source_node_for_downward = node_id
-                break
-        for node_id in G.nodes():
-            if G.in_degree(node_id) > 0:
-                example_target_node_for_upward = node_id
-                break
-
-    if example_target_node_for_upward:
-        node_name_up = G.nodes[example_target_node_for_upward].get('name', example_target_node_for_upward)
-        write_and_print(report_file, f"\n向上穿透分析 (查找股东路径) for node: {node_name_up} (ID: {example_target_node_for_upward})")
-        upward_paths = get_shareholding_paths(G, example_target_node_for_upward, max_depth=5)
-        if upward_paths:
-            write_and_print(report_file, f"  发现 {len(upward_paths)} 条到最终股东的路径:")
-            for i, path in enumerate(upward_paths[:5]): 
-                path_str_parts = []
-                if not path: continue
-                for j in range(len(path)):
-                    step = path[j]
-                    path_str_parts.append(step['name'])
-                    if j < len(path) - 1: # If not the last node in the path display (which is the target for upward)
-                        # Edge is from path[j]['id'] to path[j+1]['id']
-                        edge_data = G.get_edge_data(step['id'], path[j+1]['id'])
-                        percent_on_edge = edge_data.get('percent', 0.0) if edge_data else 0.0
-                        if percent_on_edge is None: percent_on_edge = 0.0
-                        path_str_parts.append(f" --[{percent_on_edge*100:.2f}%]--> ")
-                
-                final_cumulative_percent = path[0]['cumulative_percent_at_node'] # First node in reversed path is ultimate owner
-                write_and_print(report_file, f"    路径 {i+1}: {''.join(path_str_parts)}. (最终累积: {final_cumulative_percent*100:.4f}%)")
-        else:
-            write_and_print(report_file, "  未找到向上的股东路径或节点为根节点。")
-    else:
-        write_and_print(report_file, "\n未能选择有效的向上穿透分析起始节点。")
-
-    if example_source_node_for_downward:
-        node_name_down = G.nodes[example_source_node_for_downward].get('name', example_source_node_for_downward)
-        write_and_print(report_file, f"\n向下穿透分析 (查找投资路径) for node: {node_name_down} (ID: {example_source_node_for_downward})")
-        downward_paths = get_investment_paths(G, example_source_node_for_downward, max_depth=5)
-        if downward_paths:
-            write_and_print(report_file, f"  发现 {len(downward_paths)} 条投资路径:")
-            for i, path in enumerate(downward_paths[:5]): 
-                path_str_parts = []
-                if not path: continue
-                for j in range(len(path)):
-                    step = path[j]
-                    path_str_parts.append(step['name'])
-                    if j < len(path) - 1: # If not the last node in the path
-                        edge_data = G.get_edge_data(step['id'], path[j+1]['id'])
-                        percent_on_edge = edge_data.get('percent', 0.0) if edge_data else 0.0
-                        if percent_on_edge is None: percent_on_edge = 0.0
-                        path_str_parts.append(f" --[{percent_on_edge*100:.2f}%]--> ")
-                
-                # For downward path, the cumulative percent of the last node is the one we care about to that specific leaf/depth.
-                # However, the 'cumulative_percent_at_node' for the first node (source) is 1.0.
-                # The path[0]['cumulative_percent_at_node'] is the initial 1.0 for the source.
-                # The path[-1]['cumulative_percent_at_node'] is the cumulative effect AT THE LAST NODE of the path.
-                final_cumulative_percent_at_leaf = path[-1]['cumulative_percent_at_node']
-                write_and_print(report_file, f"    路径 {i+1}: {''.join(path_str_parts)}. (至路径末端累积: {final_cumulative_percent_at_leaf*100:.4f}%)")
-        else:
-            write_and_print(report_file, "  未找到向下的投资路径或节点为叶子节点。")
-    else:
-        write_and_print(report_file, "\n未能选择有效的向下穿透分析起始节点。")
-
-    # 7. 关联方初步分析 (共同投资)
-    write_and_print(report_file, "\n\n7. 关联方初步分析 (共同投资):")
-    write_and_print(report_file, "="*50)
-    
-    found_common_investments = False
-    # Limit the number of companies to report to avoid excessive output
-    companies_reported_for_common_investment = 0
-    max_companies_to_report_ci = 10 # 最多报告10家公司的情况
-    max_shareholders_to_display_per_company = 10 # 每家公司最多显示10个股东
-
-    # 按入度对节点排序，优先分析被较多实体投资的公司
-    sorted_nodes_by_in_degree = sorted(G.nodes(), key=lambda n: G.in_degree(n), reverse=True)
-
-    for node_id in sorted_nodes_by_in_degree:
-        if companies_reported_for_common_investment >= max_companies_to_report_ci:
-            if found_common_investments: # 只有在已经找到一些共同投资的情况下才打印这条消息
-                write_and_print(report_file, f"\n  (已显示前 {max_companies_to_report_ci} 个存在共同投资情况的公司，更多信息请直接查询图数据或调整脚本参数)")
-            break
-
-        # 只考虑确实有多个入边的节点 (即被多个股东投资)
-        if G.in_degree(node_id) > 1: 
-            shareholders_details = []
-            for shareholder_id in G.predecessors(node_id):
-                # 确保 shareholder_id 存在于图中 (通常应该存在，但作为安全检查)
-                if shareholder_id not in G.nodes:
-                    # print(f"Warning: Shareholder ID {shareholder_id} found as predecessor but not in G.nodes. Skipping.")
-                    continue 
-                
-                sh_node_data = G.nodes[shareholder_id]
-                sh_name = sh_node_data.get('name', shareholder_id)
-                sh_type = sh_node_data.get('type', '未知类型')
-                
-                edge_data = G.get_edge_data(shareholder_id, node_id)
-                percent_on_edge = edge_data.get('percent', None) if edge_data else None
-                percent_str = f"{percent_on_edge*100:.2f}%" if percent_on_edge is not None else "未知%"
-                
-                shareholders_details.append(f"{sh_name} (ID: {shareholder_id}, 类型: {sh_type}, 持股: {percent_str})")
+        # 显示主要的直接控制实体
+        if out_degree > 0:
+            direct_controls = []
+            for _, target, data in G.out_edges(controller, data=True):
+                percent = data.get('percent', '未知')
+                direct_controls.append((target, G.nodes[target]['name'], percent))
             
-            # 再次确认确实收集到了多个股东信息 (以防上面的continue跳过了一些)
-            if len(shareholders_details) > 1:
-                if not found_common_investments:
-                    write_and_print(report_file, "发现以下公司存在共同投资的股东情况 (按被投资公司总入股方数排序，显示部分)：")
-                    found_common_investments = True
+            # 按持股比例排序
+            try:
+                direct_controls.sort(key=lambda x: float(x[2].replace('%', '')) if isinstance(x[2], str) and '%' in x[2] else 0, reverse=True)
+            except:
+                pass  # 排序失败就使用原顺序
                 
-                target_company_name = G.nodes[node_id].get('name', node_id)
-                write_and_print(report_file, f"\n公司: {target_company_name} (ID: {node_id}, 总入股方数: {G.in_degree(node_id)})")
-                write_and_print(report_file, f"  共同投资方 ({len(shareholders_details)}):")
-                for sh_detail in shareholders_details[:max_shareholders_to_display_per_company]: 
-                    write_and_print(report_file, f"    - {sh_detail}")
-                if len(shareholders_details) > max_shareholders_to_display_per_company:
-                    write_and_print(report_file, f"    - ...以及其他 {len(shareholders_details) - max_shareholders_to_display_per_company} 个投资方。")
-                companies_reported_for_common_investment +=1
+            # 显示前3个直接控制的实体
+            write_and_print(report_file, f"  直接控制的主要实体:")
+            for j, (entity_id, entity_name, percent) in enumerate(direct_controls[:3]):
+                descendant_count = len(nx.descendants(G, entity_id))
+                write_and_print(report_file, f"    - {entity_name} (持股: {percent}, 该实体影响范围: {descendant_count}个节点)")
+                
+            if len(direct_controls) > 3:
+                write_and_print(report_file, f"    - ... 以及其他 {len(direct_controls) - 3} 个直接控制实体")
 
-    if not found_common_investments:
-        write_and_print(report_file, "未发现多股东共同投资于同一公司的情况。")
-
-    # 8. 链路合理性检查 (Sanity Checks for Links)
-    write_and_print(report_file, "\n\n8. 链路合理性检查:")
+    # 7. 链路合理性检查 (Sanity Checks for Links)
+    write_and_print(report_file, "\n\n7. 链路合理性检查:")
     write_and_print(report_file, "="*50)
 
-    # 检查 8.1: 自循环
+    # 检查 7.1: 自循环
     self_loops = []
     for u, v_node_id in G.edges(): # Renamed v to v_node_id to avoid conflict
         if u == v_node_id:
@@ -502,7 +341,7 @@ else:
     else:
         write_and_print(report_file, "\n检查通过：未发现自循环。")
 
-    # 检查 8.2: 父节点（投资方）缺少名称信息
+    # 检查 7.2: 父节点（投资方）缺少名称信息
     parents_missing_names = []
     for node_id, data in G.nodes(data=True):
         if G.out_degree(node_id) > 0:  # 这是一个父节点 (投资方)
@@ -524,7 +363,7 @@ else:
     else:
         write_and_print(report_file, "\n检查通过：所有父节点（投资方）均具有名称信息。")
 
-    # 检查 8.3: 边属性 'percent' (持股比例) 的合理性
+    # 检查 7.3: 边属性 'percent' (持股比例) 的合理性
     invalid_percentages = []
     num_edges_checked = 0
     for u, v_node_id, data in G.edges(data=True): # Renamed v to v_node_id
