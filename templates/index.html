@@ -448,6 +448,25 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <!-- 自定义JS -->
     <script src="/static/js/main.js"></script>
+
+    <!-- ADD THE NEW SECTION HERE: -->
+    <hr>
+    <div id="direct-shareholder-validation-area" style="margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px;">
+        <h4>直接上游股东列表 (原始数据验证):</h4>
+        <table class="table table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th>股东名称</th>
+                    <th>类型</th>
+                    <th>持股比例</th>
+                </tr>
+            </thead>
+            <tbody id="direct-shareholders-table-body">
+                <!-- JavaScript will populate this -->
+                <tr><td colspan="3">等待数据加载...</td></tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
  

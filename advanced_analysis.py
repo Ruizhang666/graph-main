@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
 import pandas as pd # Added import
 import networkx as nx
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt # Removed
 import numpy as np
 import os # 添加导入os模块
 # from matplotlib.font_manager import FontProperties # Imported via font_config
 from community import best_partition # type: ignore
-import seaborn as sns
+# import seaborn as sns # Removed
 from collections import defaultdict
 # import json # No longer needed directly here
 
 # 从新模块导入功能
-from font_config import get_font_properties
+from font_config import get_font_properties # Keep for now, though its direct use (plt.rcParams) is gone
 from graph_builder import build_graph
 
 # 确保输出目录存在
 os.makedirs('outputs/reports', exist_ok=True)
-os.makedirs('outputs/images', exist_ok=True)
+# os.makedirs('outputs/images', exist_ok=True) # Removed
 os.makedirs('outputs/temp', exist_ok=True)
 
 # 辅助函数：同时写入文件和打印到控制台
@@ -28,10 +28,10 @@ def write_and_print(file_handle, message, to_console=True):
         print(message)
 
 # 1. 设置字体
-font = get_font_properties() # This will also handle plt.rcParams
+font = get_font_properties() # Keep for now, though plt is removed
 
 # 2. 构建图
-G = build_graph() # Uses graph_builder to get the graph object
+G = build_graph("三层股权穿透输出数据_1.csv") # Uses graph_builder to get the graph object
 
 # 创建文本报告文件
 report_file_path = 'outputs/reports/advanced_analysis_report.txt'
@@ -58,60 +58,75 @@ else:
     degree_centrality = nx.degree_centrality(G)
     top_degree = sorted(degree_centrality.items(), key=lambda x: x[1], reverse=True)[:5]
     write_and_print(report_file, "\n度中心性前5名（连接最多的实体）:")
-    for node, centrality in top_degree:
-        write_and_print(report_file, f"{G.nodes[node]['name']}: {centrality:.4f}")
+    for node, centrality_val in top_degree: # Renamed centrality for clarity
+        write_and_print(report_file, f"{G.nodes[node].get('name', node)}: {centrality_val:.4f}")
 
     # PageRank中心性
+    # Initialize pagerank_centrality in case of calculation failure
+    pagerank_centrality_map = {} # Use a different name for the map
     try:
-        pagerank_centrality = nx.pagerank(G, alpha=0.85)
-        top_pagerank = sorted(pagerank_centrality.items(), key=lambda x: x[1], reverse=True)[:5]
+        pagerank_centrality_map = nx.pagerank(G, alpha=0.85)
+        top_pagerank = sorted(pagerank_centrality_map.items(), key=lambda x: x[1], reverse=True)[:5]
         write_and_print(report_file, "\nPageRank前5名（网络影响力最大）:")
         for node, pr in top_pagerank:
-            write_and_print(report_file, f"{G.nodes[node]['name']}: {pr:.4f}")
+            write_and_print(report_file, f"{G.nodes[node].get('name', node)}: {pr:.4f}")
     except Exception as e:
         write_and_print(report_file, f"\nPageRank计算出错: {e}")
+        pagerank_centrality_map = {} # Ensure it's an empty dict on error
 
     # 接近中心性：到其他所有节点距离最短的实体
     try:
-        closeness_centrality = nx.closeness_centrality(G)
-        top_closeness = sorted(closeness_centrality.items(), key=lambda x: x[1], reverse=True)[:5]
-        write_and_print(report_file, "\n接近中心性前5名（到其他节点平均距离最短的实体）:")
-        for node, centrality in top_closeness:
-            write_and_print(report_file, f"{G.nodes[node]['name']}: {centrality:.4f}")
-    except:
-        write_and_print(report_file, "\n计算接近中心性时出错，可能是图不连通")
+        # closeness_centrality = nx.closeness_centrality(G) # 对于大型不连通图非常耗时，暂时注释
+        # top_closeness = sorted(closeness_centrality.items(), key=lambda x: x[1], reverse=True)[:5]
+        # write_and_print(report_file, "\n接近中心性前5名（到其他节点平均距离最短的实体）:")
+        # for node, centrality_val in top_closeness: # Renamed centrality
+        #     write_and_print(report_file, f"{G.nodes[node].get('name', node)}: {centrality_val:.4f}")
+        write_and_print(report_file, "\n接近中心性：计算成本较高，已在此版本中暂时禁用以提高性能。")
+    except Exception as e: # Changed from general except
+        write_and_print(report_file, f"尝试处理接近中心性（已禁用）时发生预料之外的错误: {e}")
 
     # 中介中心性：位于最多最短路径上的实体（信息流/控制流的"桥梁"）
+    # Initialize betweenness_centrality in case of calculation failure
+    # This variable will be reused later
+    betweenness_centrality_map = {} # Use a different name for the map
     try:
-        betweenness_centrality = nx.betweenness_centrality(G)
-        top_betweenness = sorted(betweenness_centrality.items(), key=lambda x: x[1], reverse=True)[:5]
-        write_and_print(report_file, "\n中介中心性前5名（最关键的'桥梁'实体）:")
-        for node, centrality in top_betweenness:
-            write_and_print(report_file, f"{G.nodes[node]['name']}: {centrality:.4f}")
-    except:
-        write_and_print(report_file, "\n计算中介中心性时出错")
+        # 为提高性能，引入采样参数 k。对于大型图，不使用采样会非常慢。
+        # k 的值可以根据图的大小和可接受的计算时间进行调整。
+        # 对于拥有数万节点的图，k=100 或 k=200 是一个合理的起点。
+        write_and_print(report_file, "\n计算中介中心性 (采样 k=100)...")
+        betweenness_centrality_map = nx.betweenness_centrality(G, k=100, normalized=True) # 添加 k=100 和 normalized=True
+        top_betweenness = sorted(betweenness_centrality_map.items(), key=lambda x: x[1], reverse=True)[:5]
+        write_and_print(report_file, "中介中心性前5名（最关键的'桥梁'实体）:")
+        for node, centrality_val in top_betweenness: # Renamed centrality
+            write_and_print(report_file, f"{G.nodes[node].get('name', node)}: {centrality_val:.4f}") 
+    except Exception as e: # 更具体地捕获异常
+        write_and_print(report_file, f"\n计算中介中心性时出错: {e}")
+        betweenness_centrality_map = {} # Ensure it's an empty dict on error
+
 
     # 特征向量中心性：连接到其他重要节点的实体
     try:
-        eigenvector_centrality = nx.eigenvector_centrality(G, max_iter=1000)
-        top_eigen = sorted(eigenvector_centrality.items(), key=lambda x: x[1], reverse=True)[:5]
+        eigenvector_centrality_map = nx.eigenvector_centrality(G, max_iter=1000) # Use a different name for the map
+        top_eigen = sorted(eigenvector_centrality_map.items(), key=lambda x: x[1], reverse=True)[:5]
         write_and_print(report_file, "\n特征向量中心性前5名（连接到重要实体的实体）:")
-        for node, centrality in top_eigen:
-            write_and_print(report_file, f"{G.nodes[node]['name']}: {centrality:.4f}")
-    except:
-        write_and_print(report_file, "\n计算特征向量中心性时出错，尝试用无向图计算")
+        for node, centrality_val in top_eigen: # Renamed centrality
+            write_and_print(report_file, f"{G.nodes[node].get('name', node)}: {centrality_val:.4f}")
+    except Exception as e_outer: # Catch specific exception
+        write_and_print(report_file, f"\n计算特征向量中心性时出错 (有向图): {e_outer}。尝试用无向图计算...")
         try:
-            eigenvector_centrality = nx.eigenvector_centrality(UG, max_iter=1000)
-            top_eigen = sorted(eigenvector_centrality.items(), key=lambda x: x[1], reverse=True)[:5]
-            write_and_print(report_file, "\n特征向量中心性前5名（连接到重要实体的实体）- 基于无向图:")
-            for node, centrality in top_eigen:
-                write_and_print(report_file, f"{G.nodes[node]['name']}: {centrality:.4f}")
-        except:
-            write_and_print(report_file, "无向图也无法计算特征向量中心性")
+            eigenvector_centrality_map = nx.eigenvector_centrality(UG, max_iter=1000) # Use UG
+            top_eigen = sorted(eigenvector_centrality_map.items(), key=lambda x: x[1], reverse=True)[:5]
+            write_and_print(report_file, "特征向量中心性前5名（连接到重要实体的实体）- 基于无向图:")
+            for node, centrality_val in top_eigen: # Renamed centrality
+                write_and_print(report_file, f"{G.nodes[node].get('name', node)}: {centrality_val:.4f}")
+        except Exception as e_inner: # Catch specific exception
+            write_and_print(report_file, f"无向图也无法计算特征向量中心性: {e_inner}")
 
     # 2. 社区检测（使用python-louvain库中的社区检测算法）
     try:
         # 在无向图上执行社区检测
+        write_and_print(report_file, "\n\n社区检测 (Louvain算法):")
+        write_and_print(report_file, "="*50)
         partition = best_partition(UG)
         
         # 统计社区信息
@@ -119,8 +134,6 @@ else:
         for node, community_id in partition.items():
             communities[community_id].append(node)
         
-        write_and_print(report_file, "\n\n社区检测结果:")
-        write_and_print(report_file, "="*50)
         write_and_print(report_file, f"检测到 {len(communities)} 个社区")
         
         # 显示前3个最大社区
@@ -128,201 +141,148 @@ else:
         for i, (community_id, members) in enumerate(largest_communities):
             write_and_print(report_file, f"\n社区 {i+1}（{len(members)}个成员）:")
             for j, node in enumerate(members[:5]):  # 只显示前5个成员
-                write_and_print(report_file, f"  - {G.nodes[node]['name']}")
+                write_and_print(report_file, f"  - {G.nodes[node].get('name', node)}")
             if len(members) > 5:
                 write_and_print(report_file, f"  - ... 以及其他 {len(members) - 5} 个成员")
             
-        # 可视化社区
-        plt.figure(figsize=(20, 15))
-        
-        # 使用spring_layout算法
-        pos = nx.spring_layout(UG, k=0.2, iterations=50)
-        
-        # 为每个社区分配一个颜色
-        community_colors = sns.color_palette("husl", len(communities))
-        node_colors = [community_colors[partition[node]] for node in UG.nodes()]
-        
-        # 绘制节点
-        nx.draw_networkx_nodes(UG, pos, node_size=300, node_color=node_colors, alpha=0.8)
-        
-        # 绘制边
-        nx.draw_networkx_edges(UG, pos, width=0.5, alpha=0.5)
-        
-        # 添加节点标签
-        labels = {node: G.nodes[node]['name'] for node in G.nodes()}
-        
-        # 绘制节点标签
-        font_kwargs = {}
-        if font is not None:
-            font_kwargs['font_family'] = font.get_name()
-        nx.draw_networkx_labels(UG, pos, labels=labels, font_size=8, **font_kwargs)
-        
-        # 设置标题
-        plt.title('股权关系社区结构', fontsize=20)
-        if font is not None:
-            plt.title('股权关系社区结构', fontproperties=font, fontsize=20)
-        plt.axis('off')
-        plt.tight_layout()
-        plt.savefig('outputs/images/股权关系社区结构.png', dpi=300, bbox_inches='tight')
-        write_and_print(report_file, f"\n社区结构可视化已保存至: outputs/images/股权关系社区结构.png")
+        # 可视化社区部分已移除
+        write_and_print(report_file, "\n社区结构的可视化部分已移除以优化性能。")
         
     except ImportError:
-        write_and_print(report_file, "无法进行社区检测，请安装python-louvain库: pip install python-louvain")
+        write_and_print(report_file, "\n无法进行社区检测，请安装python-louvain库: pip install python-louvain")
     except Exception as e:
-        write_and_print(report_file, f"社区检测过程中出错: {e}")
+        write_and_print(report_file, f"\n社区检测过程中出错: {e}")
 
     # 3. 寻找循环持股关系（环）
     write_and_print(report_file, "\n\n循环持股关系分析:")
     write_and_print(report_file, "="*50)
+    write_and_print(report_file, "警告：计算所有简单循环（nx.simple_cycles）在大型或密集网络中可能非常耗时且占用大量内存。如果脚本在此处长时间无响应，请考虑注释掉此部分或针对特定子图运行。")
 
-    cycles = list(nx.simple_cycles(G))
-    if cycles:
-        write_and_print(report_file, f"发现 {len(cycles)} 个循环持股关系")
-        
-        # 显示前5个循环
-        for i, cycle in enumerate(cycles[:5]):
-            write_and_print(report_file, f"\n循环 {i+1}:")
-            for node in cycle:
-                write_and_print(report_file, f"  - {G.nodes[node]['name']}")
+    try:
+        cycles = list(nx.simple_cycles(G))
+        if cycles:
+            write_and_print(report_file, f"发现 {len(cycles)} 个循环持股关系")
             
-            # 计算这个循环中的持股比例
-            total_control = 1.0
-            write_and_print(report_file, "持股路径:")
-            for j in range(len(cycle)):
-                source = cycle[j]
-                target = cycle[(j+1) % len(cycle)]
-                if G.has_edge(source, target):
-                    percent_str = G.edges[source, target].get('percent', '未知')
-                    # 尝试将百分比转为浮点数
-                    try:
-                        if isinstance(percent_str, str) and '%' in percent_str:
-                            percent = float(percent_str.replace('%', '')) / 100
-                        else:
-                            percent = float(percent_str) if percent_str != '未知' else 0
-                        total_control *= percent
-                    except:
-                        percent = '未知'
-                    
-                    write_and_print(report_file, f"  {G.nodes[source]['name']} -> {G.nodes[target]['name']}: {percent_str}")
-            
-            # 如果成功计算了所有百分比，显示总体控制比例
-            if isinstance(total_control, float):
-                write_and_print(report_file, f"  循环控制比例: {total_control:.6f} ({total_control*100:.4f}%)")
-    else:
-        write_and_print(report_file, "未发现循环持股关系")
+            # 显示前5个循环
+            for i, cycle in enumerate(cycles[:5]):
+                write_and_print(report_file, f"\n循环 {i+1}:")
+                path_names = [G.nodes[node].get('name', node) for node in cycle]
+                write_and_print(report_file, " -> ".join(path_names) + f" -> {path_names[0]}") # Show cycle path
+                
+                # 计算这个循环中的持股比例
+                total_control = 1.0
+                valid_percents_for_cycle = True
+                write_and_print(report_file, "持股路径详情:")
+                for j_idx in range(len(cycle)): # Renamed j to j_idx
+                    source = cycle[j_idx]
+                    target = cycle[(j_idx+1) % len(cycle)]
+                    if G.has_edge(source, target):
+                        percent_str = G.edges[source, target].get('percent', '未知')
+                        percent_val = '未知' # For display
+                        try:
+                            if isinstance(percent_str, str) and '%' in percent_str:
+                                percent = float(percent_str.replace('%', '').strip()) / 100
+                            elif isinstance(percent_str, str) and percent_str.strip():
+                                percent = float(percent_str.strip())
+                            elif isinstance(percent_str, (float, int)):
+                                percent = float(percent_str)
+                            else: # Includes None or empty string after strip
+                                percent = 0 # Assume 0 if unknown or invalid for calculation
+                                valid_percents_for_cycle = False
+                            
+                            if not (0 <= percent <= 1): # Assuming percent is now 0-1 scale
+                                percent = 0 # Invalid range, treat as 0 for calculation
+                                valid_percents_for_cycle = False
+
+                            total_control *= percent
+                            percent_val = percent_str # Display original string
+
+                        except ValueError:
+                            percent_val = f"{percent_str} (无法解析)"
+                            total_control *= 0 # Invalid, treat as 0 factor
+                            valid_percents_for_cycle = False
+                        
+                        write_and_print(report_file, f"  {G.nodes[source].get('name', source)} -> {G.nodes[target].get('name', target)}: {percent_val}")
+                    else: # Should not happen in a simple cycle from nx.simple_cycles
+                        write_and_print(report_file, f"  警告: 循环中缺失边 {G.nodes[source].get('name', source)} -> {G.nodes[target].get('name', target)}")
+                        valid_percents_for_cycle = False
+                
+                if valid_percents_for_cycle and isinstance(total_control, float):
+                    write_and_print(report_file, f"  该循环的近似累积控制比例: {total_control:.6f} ({total_control*100:.4f}%)")
+                else:
+                    write_and_print(report_file, "  该循环的累积控制比例无法精确计算（由于部分持股比例未知或无效）。")
+        else:
+            write_and_print(report_file, "未发现循环持股关系")
+    except Exception as e:
+        write_and_print(report_file, f"\n寻找循环持股关系时出错: {e}")
+
 
     # 4. 集中控制分析 - 找出控制多个实体的关键股东及其控制的企业网络
     write_and_print(report_file, "\n\n关键控制者分析:")
     write_and_print(report_file, "="*50)
     
-    write_and_print(report_file, "关键控制者分析基于以下逻辑：")
-    write_and_print(report_file, "1. 出度高的节点代表控制/投资多个实体的股东")
-    write_and_print(report_file, "2. 持股比例反映控制力的强度")
-    write_and_print(report_file, "3. 与中心性指标结合，可判断节点在网络中的影响力")
-    write_and_print(report_file, "4. 关键控制者的判定综合考虑：控制企业数量、持股比例、PageRank等指标\n")
+    # write_and_print(report_file, "关键控制者分析基于以下逻辑：")
+    # write_and_print(report_file, "1. 出度高的节点代表控制/投资多个实体的股东")
+    # write_and_print(report_file, "2. 持股比例反映控制力的强度")
+    # write_and_print(report_file, "3. 与中心性指标结合，可判断节点在网络中的影响力")
+    # write_and_print(report_file, "4. 关键控制者的判定综合考虑：控制企业数量、持股比例、PageRank等指标\\n")
 
     # 按出度（控制的企业数量）排序
     out_degrees = dict(G.out_degree())
     top_controllers = sorted(out_degrees.items(), key=lambda x: x[1], reverse=True)
 
-    # 预先计算指标供使用
-    pr_centrality = nx.pagerank(G, alpha=0.85)
-    try:
-        betweenness = nx.betweenness_centrality(G)
-    except:
-        betweenness = {}  # 如果计算失败则使用空字典
+    # 使用前面计算的 PageRank (pagerank_centrality_map)
+    # 使用前面计算的、带采样的 Betweenness Centrality (betweenness_centrality_map)
+    # betweenness_centrality_map is already defined and populated (or empty if error)
 
     # 分析前3名控制者
     for i, (node, degree) in enumerate(top_controllers[:3]):
         if degree > 0:  # 确保有出边
+            node_name = G.nodes[node].get('name', node) # Get name once
             # 获取节点指标
-            pr_score = pr_centrality.get(node, 0.0)
-            btw_score = betweenness.get(node, 0.0)
+            pr_score = pagerank_centrality_map.get(node, 0.0) # Use from map
+            btw_score = betweenness_centrality_map.get(node, 0.0) # Use from map (sampled)
             node_type = G.nodes[node].get('type', '未知')
             in_degree = G.in_degree(node)
             
-            write_and_print(report_file, f"\n关键控制者 {i+1}: {G.nodes[node]['name']}")
+            write_and_print(report_file, f"\n关键控制者 {i+1}: {node_name}")
             write_and_print(report_file, f"  • 控制实体数: {degree}")
             write_and_print(report_file, f"  • 节点类型: {node_type}")
             write_and_print(report_file, f"  • PageRank: {pr_score:.4f}")
-            write_and_print(report_file, f"  • 中介中心性: {btw_score:.4f}")
+            write_and_print(report_file, f"  • 中介中心性 (采样 k=100): {btw_score:.4f}") # Clarify sampled
             write_and_print(report_file, f"  • 入度(被投资数): {in_degree}")
             
             # 获取控制的所有实体
             controlled_entities = []
-            for _, target, data in G.out_edges(node, data=True):
-                percent = data.get('percent', '未知')
-                controlled_entities.append((target, G.nodes[target]['name'], percent))
+            for _, target, edge_data in G.out_edges(node, data=True): # Renamed data to edge_data
+                percent = edge_data.get('percent', '未知')
+                controlled_entities.append((target, G.nodes[target].get('name', target), percent))
             
             # 按持股比例排序（如果可行）
             try:
-                controlled_entities.sort(key=lambda x: float(x[2].replace('%', '')) if isinstance(x[2], str) and '%' in x[2] else 0, reverse=True)
-            except:
+                # Robust sorting for percent strings
+                def sort_key_percent(item):
+                    p_str = item[2]
+                    if isinstance(p_str, str):
+                        if '%' in p_str:
+                            return float(p_str.replace('%','').strip())
+                        elif p_str.strip():
+                            return float(p_str.strip())
+                    elif isinstance(p_str, (float, int)):
+                        return float(p_str)
+                    return -1 # Default for unparsable or missing, sort them last
+                controlled_entities.sort(key=sort_key_percent, reverse=True)
+            except ValueError: # Catch if float conversion fails for some reason
                 pass  # 排序失败就使用原顺序
             
             # 打印前5个控制的实体
-            write_and_print(report_file, f"  控制的实体（按持股比例排序，显示前5个）:")
-            for j, (entity_id, entity_name, percent) in enumerate(controlled_entities[:5]):
+            write_and_print(report_file, f"  控制的实体（部分按持股比例排序，显示前5个）:")
+            for j_idx, (entity_id, entity_name, percent) in enumerate(controlled_entities[:5]): # Renamed j
                 target_type = G.nodes[entity_id].get('type', '未知')
                 write_and_print(report_file, f"    - {entity_name} (类型: {target_type}, 持股: {percent})")
             
             if len(controlled_entities) > 5:
                 write_and_print(report_file, f"    - ... 以及其他 {len(controlled_entities) - 5} 个实体")
-
-    # 5. 最终控制人分析
-    write_and_print(report_file, "\n\n5. 最终控制人分析:")
-    write_and_print(report_file, "="*50)
-    
-    write_and_print(report_file, "最终控制人分析基于以下逻辑：")
-    write_and_print(report_file, "1. 无入边节点（无人投资/控制的实体）被视为潜在的最终控制人")
-    write_and_print(report_file, "2. 从该节点可到达的所有节点构成其'影响范围'")
-    write_and_print(report_file, "3. 影响力大小取决于可到达节点数量及路径上的持股比例")
-    write_and_print(report_file, "4. 在复杂网络中，最终控制人可能通过多条路径间接控制同一实体\n")
-
-    # 寻找没有入边的节点（树的根，最终控制人）
-    ultimate_controllers = [node for node, in_degree in G.in_degree() if in_degree == 0]
-
-    write_and_print(report_file, f"发现 {len(ultimate_controllers)} 个潜在的最终控制人")
-
-    # 分析每个最终控制人控制的实体
-    for i, controller in enumerate(ultimate_controllers[:5]):  # 只显示前5个
-        # 获取节点指标
-        pr_score = pr_centrality.get(controller, 0.0)
-        btw_score = betweenness.get(controller, 0.0)
-        node_type = G.nodes[controller].get('type', '未知')
-        out_degree = G.out_degree(controller)
-        
-        write_and_print(report_file, f"\n最终控制人 {i+1}: {G.nodes[controller]['name']}")
-        write_and_print(report_file, f"  • 节点类型: {node_type}")
-        write_and_print(report_file, f"  • PageRank: {pr_score:.4f}")
-        write_and_print(report_file, f"  • 中介中心性: {btw_score:.4f}")
-        write_and_print(report_file, f"  • 出度(直接投资数): {out_degree}")
-        
-        # 计算这个控制人的影响力 - 从这个节点可到达的所有节点
-        reachable = nx.descendants(G, controller)
-        write_and_print(report_file, f"  • 可直接或间接影响: {len(reachable)} 个实体")
-        
-        # 显示主要的直接控制实体
-        if out_degree > 0:
-            direct_controls = []
-            for _, target, data in G.out_edges(controller, data=True):
-                percent = data.get('percent', '未知')
-                direct_controls.append((target, G.nodes[target]['name'], percent))
-            
-            # 按持股比例排序
-            try:
-                direct_controls.sort(key=lambda x: float(x[2].replace('%', '')) if isinstance(x[2], str) and '%' in x[2] else 0, reverse=True)
-            except:
-                pass  # 排序失败就使用原顺序
-                
-            # 显示前3个直接控制的实体
-            write_and_print(report_file, f"  直接控制的主要实体:")
-            for j, (entity_id, entity_name, percent) in enumerate(direct_controls[:3]):
-                descendant_count = len(nx.descendants(G, entity_id))
-                write_and_print(report_file, f"    - {entity_name} (持股: {percent}, 该实体影响范围: {descendant_count}个节点)")
-                
-            if len(direct_controls) > 3:
-                write_and_print(report_file, f"    - ... 以及其他 {len(direct_controls) - 3} 个直接控制实体")
 
     # 7. 链路合理性检查 (Sanity Checks for Links)
     write_and_print(report_file, "\n\n7. 链路合理性检查:")
@@ -420,4 +380,7 @@ else:
     report_file.close()
 
     print(f"\n分析报告已保存至: {report_file_path}")
-    print(f"可视化图像已保存至: outputs/images/") 
+    # print(f"可视化图像已保存至: outputs/images/") # Removed image message
+
+    print(f"\n分析报告已保存至: {report_file_path}")
+    # print(f"可视化图像已保存至: outputs/images/") # Removed image message 

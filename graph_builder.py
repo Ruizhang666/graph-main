@@ -2,6 +2,7 @@
 import pandas as pd
 import networkx as nx
 import json
+import ast
 
 # 新增辅助函数：规范化百分比数据
 def _normalize_percent(value):
@@ -53,24 +54,36 @@ def _normalize_percent(value):
 def _parse_children_recursive(main_row_entity_id, children_data, graph):
     if isinstance(children_data, str):
         try:
-            # 替换策略：
-            # 1. 将 CSV 中的 \' (代表实际的单引号) 替换为特殊占位符
-            # 2. 将结构性的 ' 替换为 "
-            # 3. 将占位符替换回 JSON 字符串中合法的 '
-            processed_str = children_data.replace("\\'", "__TEMP_SINGLE_QUOTE__") 
-            processed_str = processed_str.replace("'", '"')
-            processed_str = processed_str.replace("__TEMP_SINGLE_QUOTE__", "'") 
-            children_list = json.loads(processed_str)
-        except json.JSONDecodeError as e_json_primary:
+            # 首先尝试使用 ast.literal_eval，它可以更安全地处理包含单引号的 Python 字面量
+            children_list = ast.literal_eval(children_data)
+            if not isinstance(children_list, list): # 确保结果是列表
+                # 如果解析结果不是列表（例如，如果字符串只是一个字典），将其包装在列表中
+                # 或者根据您的数据结构决定如何处理这种情况。这里假设我们总是期望一个子节点列表。
+                print(f"GraphBuilder Warn: ast.literal_eval on children_data for {main_row_entity_id} did not return a list. Data: {children_data[:100]}") # Log a snippet
+                # 根据实际情况，你可能需要将其视为错误并返回，或尝试其他解析。
+                # 为了与后续逻辑兼容，如果不是list，尝试将其包装成list或者进行json解析的回退
+                raise ValueError("ast.literal_eval did not result in a list.")
+        except (ValueError, SyntaxError) as e_ast: # ast.literal_eval 失败
+            # print(f"GraphBuilder Info: ast.literal_eval failed for '{children_data[:100]}...' for main entity '{main_row_entity_id}'. Error: {e_ast}. Falling back to JSON parsing.")
             try:
-                # 备用：简单替换，如果上面的方法因为复杂引号失败
-                children_list = json.loads(children_data.replace("'", '"'))
-            except json.JSONDecodeError as e_json_fallback:
-                print(f"GraphBuilder Warn: Could not parse children JSON string '{children_data}' for main entity '{main_row_entity_id}'. Primary error: {e_json_primary}. Fallback error: {e_json_fallback}")
+                # 替换策略：
+                # 1. 将 CSV 中的 \\' (代表实际的单引号) 替换为特殊占位符
+                # 2. 将结构性的 ' 替换为 "
+                # 3. 将占位符替换回 JSON 字符串中合法的 '
+                processed_str = children_data.replace("\\\\\'", "__TEMP_SINGLE_QUOTE__") 
+                processed_str = processed_str.replace("'", '"')
+                processed_str = processed_str.replace("__TEMP_SINGLE_QUOTE__", "'") 
+                children_list = json.loads(processed_str)
+            except json.JSONDecodeError as e_json_primary:
+                try:
+                    # 备用：简单替换，如果上面的方法因为复杂引号失败
+                    children_list = json.loads(children_data.replace("'", '"'))
+                except json.JSONDecodeError as e_json_fallback:
+                    print(f"GraphBuilder Warn: Could not parse children JSON string '{children_data}' for main entity '{main_row_entity_id}'. AST error: {e_ast}, Primary JSON error: {e_json_primary}. Fallback JSON error: {e_json_fallback}")
+                    return
+            except Exception as e_general:
+                print(f"GraphBuilder Warn: Unknown error parsing children string '{children_data}' for main entity '{main_row_entity_id}' after AST eval. Error: {e_general}")
                 return
-        except Exception as e_general:
-            print(f"GraphBuilder Warn: Unknown error parsing children string '{children_data}' for main entity '{main_row_entity_id}'. Error: {e_general}")
-            return
     elif isinstance(children_data, list):
         children_list = children_data
     else:
@@ -124,21 +137,43 @@ def build_graph(csv_path='三层股权穿透输出数据.csv'):
     """
     从指定的CSV文件读取股权数据并构建一个NetworkX DiGraph。
     """
-    try:
-        df = pd.read_csv(csv_path, encoding='gbk')
-    except UnicodeDecodeError:
+    encodings_to_try = ['utf-8-sig', 'utf-8', 'gbk', 'gb18030', 'gb2312', 'big5']
+    df = None
+    read_successful = False
+
+    for encoding in encodings_to_try:
         try:
-            df = pd.read_csv(csv_path, encoding='gb18030')
+            df = pd.read_csv(csv_path, encoding=encoding, dtype=str) # 读取所有列为字符串以保留原始格式
+            # print(f"GraphBuilder: Successfully read CSV '{csv_path}' with encoding: {encoding}") # Commented out
+            read_successful = True
+            break
         except UnicodeDecodeError:
-            try:
-                df = pd.read_csv(csv_path, encoding='gb2312')
-            except UnicodeDecodeError:
-                try:
-                    df = pd.read_csv(csv_path, encoding='big5')
-                except UnicodeDecodeError:
-                    print(f"GraphBuilder Error: Could not decode CSV file '{csv_path}' with common Chinese encodings.")
-                    raise # 重新抛出异常，让调用者处理
+            # print(f"GraphBuilder: Failed to decode CSV '{csv_path}' with encoding: {encoding}") # Commented out
+            pass # Continue to the next encoding
+        except pd.errors.EmptyDataError:
+            print(f"GraphBuilder Warn: CSV file '{csv_path}' is empty or could not be read with encoding {encoding}.")
+            # 如果文件就是空的，不应该继续尝试其他编码或报错，而是返回空图或相应处理
+            G = nx.DiGraph()
+            print(f"GraphBuilder: Returning empty graph due to empty or unreadable CSV: {csv_path}")
+            return G
+        except Exception as e:
+            print(f"GraphBuilder: An unexpected error occurred while reading '{csv_path}' with {encoding}: {e}")
+            # 对于其他pandas读取错误或一般错误，也记录并尝试下一种编码
     
+    if not read_successful or df is None:
+        print(f"GraphBuilder Error: Could not read CSV file '{csv_path}' with any of the attempted encodings.")
+        # 可以选择抛出异常或者返回一个空图，这里选择后者以便调用方可以处理
+        G = nx.DiGraph()
+        print(f"GraphBuilder: Returning empty graph as CSV could not be loaded: {csv_path}")
+        return G
+    
+    # Check if DataFrame is empty after successful read (e.g. header only or all rows filtered out previously)
+    if df.empty:
+        print(f"GraphBuilder Warn: CSV file '{csv_path}' was read successfully but resulted in an empty DataFrame.")
+        G = nx.DiGraph()
+        print(f"GraphBuilder: Returning empty graph due to empty DataFrame from: {csv_path}")
+        return G
+
     G = nx.DiGraph()
 
     # 第一遍：添加所有在主行中定义了name的节点，并建立基于parent_id的边
@@ -193,7 +228,7 @@ def build_graph(csv_path='三层股权穿透输出数据.csv'):
 if __name__ == '__main__':
     # 测试函数
     print("Testing graph builder...")
-    graph = build_graph()
+    graph = build_graph("三层股权穿透输出数据_1.csv")
     # print("Graph nodes:")
     # for node, data in list(graph.nodes(data=True))[:5]:
     # print(f"  {node}: {data}")

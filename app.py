@@ -53,7 +53,7 @@ def calculate_node_metrics():
     
     # 计算中介中心性（可能计算时间较长）
     try:
-        betweenness_centrality = nx.betweenness_centrality(G, k=100)  # 使用采样以提高性能
+        betweenness_centrality = nx.betweenness_centrality(G, k=50)  # 使用采样以提高性能, 将k从100修改为50
         node_metrics["betweenness_centrality"] = betweenness_centrality
     except Exception as e:
         print(f"计算中介中心性时出错: {e}")
@@ -299,9 +299,25 @@ def get_equity_analysis(node_id):
         "name": node_data.get('name', str(node_id)),
         "type": node_data.get('type', ''),
         "upstream": [],  # 上游股权结构 (投资方)
-        "downstream": []  # 下游股权结构 (被投资企业)
+        "downstream": [],  # 下游股权结构 (被投资企业)
+        "direct_upstream_shareholders_flat": [] # 新增：扁平化的直接上游股东列表
     }
     
+    # 构建直接上游股东的扁平列表 (用于验证)
+    for pred_id in G.predecessors(node_id):
+        pred_data = G.nodes[pred_id]
+        edge_data = G.get_edge_data(pred_id, node_id)
+        percent = edge_data.get('percent', None) if edge_data else None
+        percent_str = f"{percent*100:.2f}%" if percent is not None and isinstance(percent, (float, int)) else (str(percent) if percent is not None else "未知%")
+
+        result["direct_upstream_shareholders_flat"].append({
+            "id": pred_id,
+            "name": pred_data.get('name', str(pred_id)),
+            "type": pred_data.get('type', ''),
+            "percent": percent_str,
+            "raw_percent": percent # 也可选择性返回原始百分比值
+        })
+
     # 构建上游股权分析 - 从投资方开始
     for pred_id in G.predecessors(node_id):
         pred_data = G.nodes[pred_id]
@@ -379,7 +395,7 @@ def get_equity_analysis(node_id):
 if __name__ == '__main__':
     # 初始化加载图
     print("正在预加载图数据...")
-    G = build_graph()
+    G = build_graph("三层股权穿透输出数据_1.csv")
     calculate_node_metrics()
     print(f"图加载完成，共 {G.number_of_nodes()} 个节点和 {G.number_of_edges()} 条边")
     # 尝试使用8888端口，避免冲突

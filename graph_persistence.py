@@ -1,8 +1,9 @@
 import networkx as nx
 import graph_builder # 假设 graph_builder.py 在同一个目录下或者在PYTHONPATH中
+import os
 
 # 定义默认的图文件路径
-DEFAULT_GRAPH_FILE = "outputs/graph_model.graphml"
+DEFAULT_GRAPH_FILE = "outputs/graph_model_updated.graphml"
 
 def save_graph(graph, file_path):
     """
@@ -13,7 +14,28 @@ def save_graph(graph, file_path):
     file_path (str): 保存图的文件路径 (推荐使用 .graphml 格式)。
     """
     try:
-        nx.write_graphml(graph, file_path)
+        # 确保输出目录存在
+        output_dir = os.path.dirname(file_path)
+        if output_dir and not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+            print(f"Created directory: {output_dir}")
+
+        # 创建图的副本以进行修改，避免更改原始图对象
+        graph_copy = graph.copy()
+
+        # 预处理节点属性：将 None 替换为空字符串
+        for node, data in graph_copy.nodes(data=True):
+            for key, value in data.items():
+                if value is None:
+                    data[key] = ""
+        
+        # 预处理边属性：将 None 替换为空字符串
+        for u, v, data in graph_copy.edges(data=True):
+            for key, value in data.items():
+                if value is None:
+                    data[key] = ""
+
+        nx.write_graphml(graph_copy, file_path)
         print(f"Graph successfully saved to {file_path}")
     except Exception as e:
         print(f"Error saving graph to {file_path}: {e}")
@@ -66,7 +88,7 @@ if __name__ == '__main__':
 
     # 1. 构建图 (使用 graph_builder.py)
     print("Attempting to build the graph...")
-    original_graph = graph_builder.build_graph(csv_path='三层股权穿透输出数据.csv')
+    original_graph = graph_builder.build_graph(csv_path='三层股权穿透输出数据_1.csv')
 
     if original_graph:
         print(f"Graph built: {original_graph.number_of_nodes()} nodes, {original_graph.number_of_edges()} edges.")

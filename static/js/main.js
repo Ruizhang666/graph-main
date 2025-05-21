@@ -248,50 +248,39 @@ const app = new Vue({
                 upstream: null,
                 downstream: null
             };
-            this.flattenUpstreamInvestors = [];
-            this.flattenDownstreamInvestees = [];
             
-            // 请求后端API获取股权分析数据
             axios.get(`/api/equity_analysis/${this.currentCompany.id}`)
                 .then(response => {
-                    console.log('股权分析结果:', response.data);
+                    this.equityAnalysisResult = response.data; // 包含 upstream, downstream, 和新增的 direct_upstream_shareholders_flat
+                    this.generatingAnalysis = false;
                     
-                    // 处理上游股权结构 (投资方)
-                    if (response.data.upstream && response.data.upstream.length > 0) {
-                        this.equityAnalysisResult.upstream = response.data.upstream;
-                        this.flattenUpstreamInvestors = this.flattenInvestors(response.data.upstream);
-                    } else if (this.currentCompany.investors && this.currentCompany.investors.length > 0) {
-                        // 如果API没有返回上游数据，但当前公司有投资方信息，使用当前数据构建
-                        this.equityAnalysisResult.upstream = this.processUpstreamEquity();
-                        this.flattenUpstreamInvestors = this.currentCompany.investors;
+                    // 处理扁平化的上游和下游数据，如果需要用于其他地方
+                    this.flattenUpstreamInvestors = this.flattenInvestors(this.equityAnalysisResult.upstream || []);
+                    this.flattenDownstreamInvestees = this.flattenInvestees(this.equityAnalysisResult.downstream || []);
+
+                    // 新增：填充直接上游股东验证表格
+                    const validationTableBody = document.getElementById('direct-shareholders-table-body');
+                    if (validationTableBody) {
+                        validationTableBody.innerHTML = ''; // 清空旧数据
+                        const shareholders = response.data.direct_upstream_shareholders_flat;
+                        if (shareholders && shareholders.length > 0) {
+                            shareholders.forEach(shareholder => {
+                                const row = validationTableBody.insertRow();
+                                row.insertCell().textContent = shareholder.name || 'N/A';
+                                row.insertCell().textContent = shareholder.type || 'N/A';
+                                row.insertCell().textContent = shareholder.percent || 'N/A';
+                            });
+                        } else {
+                            validationTableBody.innerHTML = '<tr><td colspan="3">未找到直接上游股东数据 (来自API)。</td></tr>';
+                        }
+                    } else {
+                        console.warn("未能找到ID为 'direct-shareholders-table-body' 的元素来显示验证数据。");
                     }
-                    
-                    // 处理下游股权结构 (被投资企业)
-                    if (response.data.downstream && response.data.downstream.length > 0) {
-                        this.equityAnalysisResult.downstream = response.data.downstream;
-                        this.flattenDownstreamInvestees = this.flattenInvestees(response.data.downstream);
-                    } else if (this.currentCompany.investees && this.currentCompany.investees.length > 0) {
-                        // 如果API没有返回下游数据，但当前公司有被投资企业信息，使用当前数据构建
-                        this.equityAnalysisResult.downstream = this.processDownstreamEquity();
-                        this.flattenDownstreamInvestees = this.currentCompany.investees;
-                    }
+
                 })
                 .catch(error => {
-                    console.error('获取股权穿透分析失败:', error);
-                    this.$message.warning('获取详细股权穿透数据失败，将使用基本数据生成报告');
-                    
-                    // 使用当前公司数据生成基本的股权结构
-                    if (this.currentCompany.investors && this.currentCompany.investors.length > 0) {
-                        this.equityAnalysisResult.upstream = this.processUpstreamEquity();
-                        this.flattenUpstreamInvestors = this.currentCompany.investors;
-                    }
-                    
-                    if (this.currentCompany.investees && this.currentCompany.investees.length > 0) {
-                        this.equityAnalysisResult.downstream = this.processDownstreamEquity();
-                        this.flattenDownstreamInvestees = this.currentCompany.investees;
-                    }
-                })
-                .finally(() => {
+                    console.error('生成股权穿透分析失败:', error);
+                    this.$message.error('生成股权穿透分析失败');
                     this.generatingAnalysis = false;
                 });
         },
@@ -299,56 +288,28 @@ const app = new Vue({
         // 扁平化投资方树结构
         flattenInvestors(investors) {
             let result = [];
-            
-            const processNode = (node) => {
+            const processNode = (node, level) => {
                 if (!node) return;
                 
-                // 添加当前节点
-                if (node.id && node.name) {
-                    result.push(node);
-                }
-                
-                // 处理子节点
-                if (node.children && node.children.length > 0) {
-                    node.children.forEach(child => processNode(child));
-                }
+                result.push(node);
             };
-            
-            // 处理根节点的所有子节点（实际投资方）
-            investors.forEach(rootNode => {
-                if (rootNode.children && rootNode.children.length > 0) {
-                    rootNode.children.forEach(child => processNode(child));
-                }
-            });
-            
+
+            if (investors && Array.isArray(investors)) {
+                investors.forEach(investorNode => {
+                    result.push(investorNode);
+                });
+            }
             return result;
         },
         
         // 扁平化被投资企业树结构
         flattenInvestees(investees) {
             let result = [];
-            
-            const processNode = (node) => {
-                if (!node) return;
-                
-                // 添加当前节点
-                if (node.id && node.name) {
-                    result.push(node);
-                }
-                
-                // 处理子节点
-                if (node.children && node.children.length > 0) {
-                    node.children.forEach(child => processNode(child));
-                }
-            };
-            
-            // 处理根节点的所有子节点（实际被投资企业）
-            investees.forEach(rootNode => {
-                if (rootNode.children && rootNode.children.length > 0) {
-                    rootNode.children.forEach(child => processNode(child));
-                }
-            });
-            
+            if (investees && Array.isArray(investees)) {
+                investees.forEach(investeeNode => {
+                    result.push(investeeNode);
+                });
+            }
             return result;
         },
         
